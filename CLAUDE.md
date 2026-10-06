@@ -1,7 +1,7 @@
 # Working in this repo
 
 This repo is a Claude Code plugin marketplace (`gamedev-skills`) of skills for Unreal Engine 5,
-FiveM and FiveM for GTAV Enhanced. The owner writes in German; reply in German. Skill content is English.
+FiveM, FiveM for GTAV Enhanced and Brotato mods (Godot 3). The owner writes in German; reply in German. Skill content is English.
 
 ## Layout
 

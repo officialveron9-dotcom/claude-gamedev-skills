@@ -1,11 +1,12 @@
 # Gamedev-Skills für Claude
 
 Skills, die Claude beim Programmieren für **Unreal Engine 5** (Billard-Spiel mit hoher Grafik),
-**FiveM** und **FiveM für GTA V Enhanced** fehlendes Wissen geben: Entwicklungsfallen,
+**FiveM**, **FiveM für GTA V Enhanced** und **Brotato-Mods** (Godot) fehlendes Wissen geben: Entwicklungsfallen,
 Fehlermeldung → Ursache → Lösung, richtige Code-Muster und Checklisten. Hintergrundwissen,
 das Claude ohnehin kennt, ist bewusst weggelassen.
 
-Stand der Recherche: **2026-10-06** (Unreal Engine 5.8, FiveM Legacy und FiveM für GTAV Enhanced im Early Access).
+Stand der Recherche: **2026-10-06** (Unreal Engine 5.8, FiveM Legacy und FiveM für GTAV Enhanced im Early Access,
+Brotato 1.1.15.x auf einem eigenen Godot-3-Build mit Godot Mod Loader 6.x).
 Die Skill-Inhalte sind auf Englisch, weil Doku, APIs und Fehlermeldungen englisch sind.
 Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten auch deutsche Stichwörter.
 
@@ -16,6 +17,7 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 | `unreal-engine` | 11 | eigene Recherche |
 | `unreal-engine-reference` | 31 | [quodsoler/unreal-engine-skills](https://github.com/quodsoler/unreal-engine-skills), MIT |
 | `fivem` | 6 | eigene Recherche |
+| `brotato` | 4 | eigene Recherche |
 | `general-dev` | 2 | [obra/superpowers](https://github.com/obra/superpowers), MIT |
 
 ### `unreal-engine` (eigene Skills)
@@ -45,6 +47,18 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 | `fivem-server-setup` | server.cfg, Game Build, txAdmin, Artifacts, Datenbank, Streaming von Autos/MLOs/Kleidung |
 | `fivem-gta5-enhanced` | Was auf FiveM für GTAV Enhanced anders ist: `cfx-server`, Breaking Changes, `stream_enhanced`, Alchemist |
 
+### `brotato` (eigene Skills)
+
+| Skill | Wofür |
+|---|---|
+| `brotato-modding` | Godot Mod Loader 6.x, `manifest.json`, `mod_main.gd`, Script-Extensions, Brotato-Interna, Workshop, Fehler → Lösung |
+| `godot3-gdscript-pitfalls` | Verhindert Godot-4-Syntax in Godot-3-Code (`export`, `yield`, `connect`, `.method()` …), Engine-Fallen |
+| `brotato-online-multiplayer` | Online-Koop über Steam-Lobbys und P2P: Host-Autorität, Zufall synchronisieren, Snapshots, Desync-Fixes |
+| `brotato-stability-performance` | Gegen Lag, Abstürze und Verbindungsabbrüche: Pooling, freigegebene Nodes, CrashReporter, Release-Checkliste |
+
+Brotato läuft auf **Godot 3**. Installiere keine Godot-4-Skills zusammen mit diesen, sonst schreibt Claude
+wieder Godot-4-Code. Externe Tools und Beispiel-Mods: [plugins/brotato/EXTERNAL.md](plugins/brotato/EXTERNAL.md).
+
 ### `unreal-engine-reference` und `general-dev` (übernommen)
 
 - **`unreal-engine-reference`**: 31 tiefe UE-5.8-C++-Skills von quodsoler, z. B. GAS, Replikation,
@@ -61,6 +75,7 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 |---|---|
 | Unreal-Spiel | `unreal-engine`, `unreal-engine-reference`, `general-dev` |
 | FiveM-Server (Legacy oder Enhanced) | `fivem`, `general-dev` |
+| Brotato-Mod | `brotato`, `general-dev` |
 
 ### A) Claude Code im Web (claude.ai/code)
 
@@ -75,12 +90,14 @@ Plugins und Marketplaces werden dort nicht geladen. Deshalb kopierst du die Skil
   # Windows PowerShell, im Ordner dieses Repos
   .\scripts\install-skills.ps1 -Project C:\Pfad\zu\MeinSpiel -Plugin unreal-engine, unreal-engine-reference, general-dev
   .\scripts\install-skills.ps1 -Project C:\Pfad\zu\server-data -Plugin fivem, general-dev
+  .\scripts\install-skills.ps1 -Project C:\Pfad\zu\MeineBrotatoMod -Plugin brotato, general-dev
   ```
 
   ```bash
   # Linux / macOS / Git Bash
   scripts/install-skills.sh ~/MeinSpiel unreal-engine unreal-engine-reference general-dev
   scripts/install-skills.sh ~/server-data fivem general-dev
+  scripts/install-skills.sh ~/MeineBrotatoMod brotato general-dev
   ```
 
 Wenn du hier Skills änderst, kopierst du sie danach erneut in deine Projekte.
@@ -95,6 +112,7 @@ angemeldet sein (z. B. `gh auth login` und danach `gh auth setup-git`).
 /plugin install unreal-engine@gamedev-skills
 /plugin install unreal-engine-reference@gamedev-skills
 /plugin install fivem@gamedev-skills
+/plugin install brotato@gamedev-skills
 /plugin install general-dev@gamedev-skills
 ```
 
