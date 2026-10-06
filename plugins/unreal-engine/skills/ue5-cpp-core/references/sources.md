@@ -1,0 +1,19 @@
+# Sources (accessed 2026-10-06)
+
+Note: dev.epicgames.com, forums.unrealengine.com, tomlooman.com, benui.ca and unrealcommunity.wiki could not be fetched directly from the research environment; their content was consulted through search-engine excerpts. Engine facts were cross-checked against engine header/source copies published on GitHub (unofficial mirrors, cited below) and against well-known community projects.
+
+| Source | Backs up |
+|---|---|
+| UE 5.7.0 engine source mirror (unofficial): https://github.com/F-Fumino/UE5.7 — `Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h`, `Private/Actor.cpp`, `Pawn.h`, `CoreUObject/Public/UObject/GCObject.h`, `StrongObjectPtr.h`, `Core/Public/Delegates/DelegateSignatureImpl.inl`, `Core/Public/UObject/ScriptDelegates.h`, `Core/Public/Logging/StructuredLog.h`, `Core/Public/Misc/AssertionMacros.h`, `Core/Public/Templates/SharedPointerFwd.h`, `CoreUObject/Private/UObject/ObjectBaseUtility.cpp`, `GarbageCollection.cpp` | `bReplicates` protected + `SetReplicates` warning text; `AddWeakLambda`; duplicate dynamic-binding ensure; `FGCObject` pure virtuals; `UE_LOGFMT`; assert macros; `ESPMode::ThreadSafe` default; `gc.GarbageEliminationEnabled` default 1; `gc.AllowIncrementalReachability` (experimental, default 0); static_assert texts "Formatting string must be a TCHAR array" / "Invalid argument(s) passed to ..." |
+| UE 5.5.2 mirror (unofficial): https://github.com/Pekyyyyyy/Toon-UE (`Core/Public/Containers/AllowShrinking.h`, `CoreUObject/Public/StructUtils/`) | `EAllowShrinking` bool-overload deprecation (FORENGINE 5.5); StructUtils in CoreUObject by 5.5 |
+| UE 5.6.1 mirror (unofficial): https://github.com/orgitcog/u9n (`AllowShrinking.h`) | bool `bAllowShrinking` overloads deprecated for all code in 5.6 |
+| UE 5.1 mirror (unofficial): https://github.com/wabiverse/UnrealEngineOldArchived (`ObjectMacros.h`, `UObjectGlobals.h`, `GameplayTagsManager.cpp`, `WidgetBlueprintCompiler.cpp`) | `ANY_PACKAGE` deprecation (5.1); gameplay tag "not found" ensure text; BindWidget error text |
+| UE4 source mirrors (texts unchanged in UE5): https://github.com/windystrife/UnrealEngine_NVIDIAGameWorks , https://github.com/JimmieKJ/unrealTournament | `.generated.h` UHT messages; `FObjectFinders can't be used outside of constructors to find %s` |
+| fjz13/UnrealSpecifiers: https://github.com/fjz13/UnrealSpecifiers | "BlueprintReadWrite/ReadOnly should not be used on private members"; `const` BlueprintCallable => pure unless `BlueprintPure=false`; Pure must return a value |
+| Tom Looman, ActionRoguelike sample: https://github.com/tomlooman/ActionRoguelike (`Config/DefaultEngine.ini`) | Core Redirect syntax incl. `EnumRedirects ... ValueChanges`, names without prefix |
+| Megafunk/MassSample `Config/DefaultEngine.ini`: https://github.com/Megafunk/MassSample | `PropertyRedirects`/`FunctionRedirects` syntax |
+| quodsoler/unreal-engine-skills (third-party, claims 5.8 header verification): https://github.com/quodsoler/unreal-engine-skills | Lead for 5.6 `HideAssetPicker` -> `HidePinAssetPicker`; cross-check of error message list |
+| Epic issue UE-186247 (via search excerpt): https://issues.unrealengine.com/issue/UE-186247 | PIE vs standalone GameInstance/world-subsystem init order difference |
+| Epic forum "A call to an immediate function is not a constant expression" (5.8): https://forums.unrealengine.com/t/a-call-to-an-immediate-function-is-not-a-constant-expression/2735806 | 5.8 compile-time checked format strings |
+| Spongehammer "Unreal Engine 5.8 Upgrade: What Broke": https://www.spongehammer.com/unreal-engine-5-8-upgrade/ (search excerpt) | 5.8 UE_LOG argument count validation at compile time |
+| Epic docs "Logging in Unreal Engine": https://dev.epicgames.com/documentation/unreal-engine/logging-in-unreal-engine ; rodneylab UE_LOGFMT article: https://rodneylab.com/ue5-c++-logging/ | `UE_LOGFMT` since 5.2, header `Logging/StructuredLog.h` |

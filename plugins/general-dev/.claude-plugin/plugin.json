@@ -1,0 +1,5 @@
+{
+  "name": "general-dev",
+  "description": "General debugging discipline: systematic root-cause debugging and verification before claiming success (from obra/superpowers, MIT).",
+  "author": { "name": "officialveron9-dotcom" }
+}

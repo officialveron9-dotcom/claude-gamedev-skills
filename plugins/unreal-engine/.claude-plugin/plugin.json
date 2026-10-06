@@ -1,0 +1,5 @@
+{
+  "name": "unreal-engine",
+  "description": "Unreal Engine 5 pitfalls and fixes: C++, builds and modules, multiplayer, gameplay systems, lighting and rendering, performance, animation, NPC AI, billiards physics.",
+  "author": { "name": "officialveron9-dotcom" }
+}

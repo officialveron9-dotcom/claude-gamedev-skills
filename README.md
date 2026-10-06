@@ -1,0 +1,158 @@
+# Gamedev-Skills für Claude
+
+Skills, die Claude beim Programmieren für **Unreal Engine 5** (Billard-Spiel mit hoher Grafik),
+**FiveM** und **FiveM für GTA V Enhanced** fehlendes Wissen geben: Entwicklungsfallen,
+Fehlermeldung → Ursache → Lösung, richtige Code-Muster und Checklisten. Hintergrundwissen,
+das Claude ohnehin kennt, ist bewusst weggelassen.
+
+Stand der Recherche: **2026-10-06** (Unreal Engine 5.8, FiveM Legacy und FiveM für GTAV Enhanced im Early Access).
+Die Skill-Inhalte sind auf Englisch, weil Doku, APIs und Fehlermeldungen englisch sind.
+Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten auch deutsche Stichwörter.
+
+## Was drin ist
+
+| Plugin | Skills | Herkunft |
+|---|---|---|
+| `unreal-engine` | 11 | eigene Recherche |
+| `unreal-engine-reference` | 31 | [quodsoler/unreal-engine-skills](https://github.com/quodsoler/unreal-engine-skills), MIT |
+| `fivem` | 6 | eigene Recherche |
+| `general-dev` | 2 | [obra/superpowers](https://github.com/obra/superpowers), MIT |
+
+### `unreal-engine` (eigene Skills)
+
+| Skill | Wofür |
+|---|---|
+| `ue5-cpp-core` | UObject/Garbage Collection, Reflection-Makros, Delegates, Blueprint↔C++, Core Redirects |
+| `ue5-build-and-modules` | Build.cs, Linker-Fehler (LNK2019), Live Coding, UBT/UHT, Packaging-Fehler |
+| `ue5-multiplayer` | Replikation, RPCs, Ownership, „RPC feuert nicht“, „Variable repliziert nicht“ |
+| `ue5-gameplay-systems` | Enhanced Input, Gameplay Ability System, Gameplay Tags, Subsystems, Asset Loading, UI |
+| `ue5-version-notes` | Was sich von UE 5.0 bis 5.8 geändert hat, bekannte Engine-Bugs |
+| `ue5-lighting-rendering` | Lumen, Belichtung, Licht im Innenraum, Reflexionen, Materialien (Filz, Kugeln), Path Tracer |
+| `ue5-performance-optimization` | Profiling, CPU/GPU-Engpässe, Nanite, Scalability, Shader-Ruckler, Speicher sparen |
+| `ue5-animation-characters` | Animation Blueprints, Motion Matching, Control Rig/IK, Retargeting, MetaHuman |
+| `ue5-character-creation-clothing` | Charaktere aus MetaHuman, Fab, CC4, Daz, Mixamo; Kleidung anziehen ohne Durchstechen; Stoffsimulation |
+| `ue5-npc-ai` | StateTree/Behavior Tree, NavMesh, Wahrnehmung, Smart Objects, Zuschauer-NPCs, KI-Gegner |
+| `billiards-game-dev` | Kugelphysik (eigene Simulation statt Chaos), Effet, Banden, Zielhilfe, Multiplayer-Sync |
+
+### `fivem` (eigene Skills)
+
+| Skill | Wofür |
+|---|---|
+| `fivem-resource-dev` | fxmanifest, Events, Callbacks, Exports, State Bags, NUI, OneSync-Entities |
+| `fivem-frameworks` | ESX Legacy, QBCore, Qbox, ox_lib/ox_inventory/ox_target, oxmysql, Bridges |
+| `fivem-security` | Server-Events absichern, Exploits, Entity Lockdown, ACE, Secrets |
+| `fivem-performance-debugging` | resmon, Profiler, teure Loops, Konsolenfehler mit Lösung |
+| `fivem-server-setup` | server.cfg, Game Build, txAdmin, Artifacts, Datenbank, Streaming von Autos/MLOs/Kleidung |
+| `fivem-gta5-enhanced` | Was auf FiveM für GTAV Enhanced anders ist: `cfx-server`, Breaking Changes, `stream_enhanced`, Alchemist |
+
+### `unreal-engine-reference` und `general-dev` (übernommen)
+
+- **`unreal-engine-reference`**: 31 tiefe UE-5.8-C++-Skills von quodsoler, z. B. GAS, Replikation,
+  Actor-Lifecycle, Niagara, UMG/Slate, Savegames, Testing. Der Skill `ue-project-context` legt in
+  deinem Spielprojekt `.agents/ue-project-context.md` an, das die anderen Skills lesen. Den solltest du zuerst ausführen.
+- **`general-dev`**: `systematic-debugging` (erst Ursache finden, dann fixen) und
+  `verification-before-completion` (erst prüfen, dann „fertig“ sagen) aus der bekanntesten Skill-Sammlung.
+
+## So benutzt du die Skills
+
+**Nicht alles in jedes Projekt packen.** Jede Skill-Beschreibung kostet Claude in jeder Nachricht etwas Kontext.
+
+| Projekt | Plugins |
+|---|---|
+| Unreal-Spiel | `unreal-engine`, `unreal-engine-reference`, `general-dev` |
+| FiveM-Server (Legacy oder Enhanced) | `fivem`, `general-dev` |
+
+### A) Claude Code im Web (claude.ai/code)
+
+Cloud-Sessions laden **nur** Skills aus dem Ordner `.claude/skills/` des Repos, an dem gearbeitet wird.
+Plugins und Marketplaces werden dort nicht geladen. Deshalb kopierst du die Skills einmal in dein Spiel-Repo:
+
+- **Am einfachsten:** Starte eine Session mit deinem Spiel-Repo **und** diesem Repo und schreib:
+  „Kopiere die Unreal-Skills aus gamedev-skills nach `.claude/skills/` in meinem Spiel-Repo und pushe.“
+- **Oder selbst auf deinem PC** (danach `.claude/skills/` committen und pushen):
+
+  ```powershell
+  # Windows PowerShell, im Ordner dieses Repos
+  .\scripts\install-skills.ps1 -Project C:\Pfad\zu\MeinSpiel -Plugin unreal-engine, unreal-engine-reference, general-dev
+  .\scripts\install-skills.ps1 -Project C:\Pfad\zu\server-data -Plugin fivem, general-dev
+  ```
+
+  ```bash
+  # Linux / macOS / Git Bash
+  scripts/install-skills.sh ~/MeinSpiel unreal-engine unreal-engine-reference general-dev
+  scripts/install-skills.sh ~/server-data fivem general-dev
+  ```
+
+Wenn du hier Skills änderst, kopierst du sie danach erneut in deine Projekte.
+
+### B) Claude Code lokal (Terminal, Desktop-App, VS Code)
+
+Dieses Repo ist ein Plugin-Marketplace. Weil es privat ist, muss git auf deinem PC bei GitHub
+angemeldet sein (z. B. `gh auth login` und danach `gh auth setup-git`).
+
+```text
+/plugin marketplace add <dein-github-name>/<dieses-repo>
+/plugin install unreal-engine@gamedev-skills
+/plugin install unreal-engine-reference@gamedev-skills
+/plugin install fivem@gamedev-skills
+/plugin install general-dev@gamedev-skills
+```
+
+Alternativ für alle Projekte auf einmal: `.\scripts\install-skills.ps1 -Personal -Plugin ...` kopiert
+die Skills nach `~/.claude/skills/`.
+
+### C) claude.ai (Chat)
+
+1. Unter **Settings → Capabilities** muss „Code execution and file creation“ an sein.
+2. ZIP-Dateien bauen: `.\scripts\package-skills.ps1` (Windows) oder `scripts/package-skills.sh`.
+   Danach liegt pro Skill eine ZIP in `dist/`.
+3. In claude.ai: **Customize → Skills → „+“ → Upload a skill** und die ZIP hochladen.
+
+Falls ein Upload wegen zu langer Beschreibung abgelehnt wird, lass Claude die `description` im
+jeweiligen `SKILL.md` kürzen.
+
+## Empfohlene Plugins zusätzlich (lokal)
+
+Gut bewertete Sammlungen, die man besser installiert als kopiert. Die volle, gerankte Liste mit
+Sternen, Lizenzen und Begründung steht in [docs/external-resources.md](docs/external-resources.md).
+
+```text
+/plugin install superpowers@claude-plugins-official                          # Debugging, TDD, Planen, Review
+/plugin install unreal-engine-skills-for-claude-code@claude-plugins-official # Epics offizielles UE-Plugin (Editor-Steuerung, UE 5.8)
+/plugin install lua-lsp@claude-plugins-official                              # Lua-Fehler sofort sehen (FiveM, mit fivem-lls-addon)
+/plugin install clangd-lsp@claude-plugins-official                           # C++-Fehler sofort sehen (UE, braucht compile_commands.json)
+/plugin install code-review@claude-plugins-official                          # Code-Review
+```
+
+Wenn du `superpowers` komplett installierst, brauchst du `general-dev` aus diesem Repo nicht zusätzlich.
+
+## Neue Probleme eintragen
+
+Claude weiß nicht alles. Wenn ihr einen Fehler gelöst habt, der nicht in den Skills stand,
+sag Claude in einer Session mit diesem Repo:
+
+> „Trag diesen Fehler und die Lösung in den passenden Skill ein.“
+
+Jeder Skill hat unter `references/` eine Tabelle mit bekannten Problemen
+(`common-errors.md`, `common-issues.md`, `troubleshooting.md` oder `known-issues.md`). Dort kommt eine
+neue Zeile rein: **Fehlermeldung bzw. Symptom → Ursache → Lösung**.
+
+## Aufbau
+
+```text
+.claude-plugin/marketplace.json     Marketplace "gamedev-skills"
+plugins/<plugin>/skills/<skill>/    SKILL.md + references/ (Details, Fehlertabellen, Quellen)
+plugins/<plugin>/UPSTREAM.md        bei übernommenen Skills: Quelle, Lizenz, Commit
+scripts/                            Skills in Projekte kopieren, ZIPs für claude.ai bauen
+docs/external-resources.md          gerankte externe Skills, MCP-Server und Tools
+research/                           Format der Skills/Plugins, welche fremden Skills man übernehmen darf
+```
+
+Jede eigene Skill hat `references/sources.md` mit den Quellen. Was nicht direkt aus einer
+Primärquelle belegt ist, ist dort markiert. Vor allem bei Unreal 5.8 und FiveM für GTAV Enhanced
+ändert sich viel. Prüf bei Versions-Updates die Datei `ue5-version-notes` bzw. `fivem-gta5-enhanced`.
+
+## Lizenzen
+
+Übernommene Skills stehen unter ihrer Originallizenz (MIT). Die Lizenzdatei liegt in jedem Skill-Ordner,
+die Quelle samt Commit steht in `UPSTREAM.md`.

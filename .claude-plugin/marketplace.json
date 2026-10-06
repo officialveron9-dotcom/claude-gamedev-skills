@@ -1,0 +1,29 @@
+{
+  "name": "gamedev-skills",
+  "description": "Skills for Unreal Engine 5, billiards game development, FiveM and FiveM for GTA V Enhanced: pitfalls, error fixes and correct patterns, plus curated MIT-licensed community skills.",
+  "owner": {
+    "name": "officialveron9-dotcom"
+  },
+  "plugins": [
+    {
+      "name": "unreal-engine",
+      "source": "./plugins/unreal-engine",
+      "description": "Unreal Engine 5: C++, builds and modules, multiplayer, gameplay systems, lighting and rendering, performance, animation, NPC AI, billiards physics."
+    },
+    {
+      "name": "fivem",
+      "source": "./plugins/fivem",
+      "description": "FiveM / Cfx.re: resources, frameworks (ESX, QBCore, Qbox, ox), security, performance and debugging, server setup, GTA V Enhanced."
+    },
+    {
+      "name": "unreal-engine-reference",
+      "source": "./plugins/unreal-engine-reference",
+      "description": "31 Unreal Engine 5.8 C++ reference skills from quodsoler/unreal-engine-skills (MIT)."
+    },
+    {
+      "name": "general-dev",
+      "source": "./plugins/general-dev",
+      "description": "Systematic debugging and verification before completion, from obra/superpowers (MIT)."
+    }
+  ]
+}
