@@ -12,52 +12,17 @@ Do not invent convars, natives, manifest fields or file names that are not in th
 its references; when unsure, tell the user to check `docs.fivem.net/docs/developers/legacy-vs-enhanced/`
 and the patch notes at `github.com/citizenfx/rfc/discussions/categories/patch-notes`.
 
-## What "FiveM Enhanced" means
+## Ground rules
 
-- Official name: **"FiveM for GTAV Enhanced"**. The old platform is now **"FiveM Legacy" /
-  "FiveM for GTAV Legacy"**. Cfx docs also say **Gen8** (Legacy) and **Gen9** (Enhanced). [Official]
-- It is a separate client ("FiveM for GTAV Enhanced", own installer/launcher) plus separate
-  server binaries ("Cfx Server", executable `cfx-server.exe`). [Official, docs 2026-07-20+]
-- It runs on **GTA V Enhanced** (the 2025 PC upgrade: DX12, ray tracing options). Legacy FiveM
-  keeps running on GTA V Legacy unchanged. [Official]
-- Other meanings: shops sell "enhanced" graphics packs/ReShade presets; those are unrelated.
-  The old Legacy convar `sv_enhancedHostSupport` / native `ENABLE_ENHANCED_HOST_SUPPORT` belongs to
-  the old P2P/host model, not GTA V Enhanced (docs: "Not used anymore (P2P)"). If the user says "Enhanced
-  Server" in a FiveM context, assume FiveM for GTAV Enhanced, but confirm if they might mean a
-  graphics pack.
-
-## Status as of 2026-10
-
-| Date | Event | Tag |
-|---|---|---|
-| 2025 (Feb/Mar) | Cfx announces Enhanced support "coming"; Legacy support continues; **no cross-play, cannot run both versions on one server** | [Official, forum] |
-| 2025-11-20 | **Alchemist** (Gen8 to Gen9 asset converter) released | [Official] |
-| 2026-03-18 | Development Update #1 (OneSync overhaul) | [Reported date] |
-| 2026-07-20 | Enhanced docs published on docs.fivem.net | [Official, git log] |
-| **2026-07-21** | **Early access, open to everyone** | [Official] |
-| 2026-07-21 to 08-19 | Hotfixes 1-11; C# runtime patch 2026-08-20 | [Official] |
-| 2026-08-31, 09-22, 09-24, 09-30 | Patches; several **require updating cfx-server** (protocol changes) | [Official] |
-
-As of 2026-10-06 it is still **early access**. Cfx says it "will contain bugs and missing
-features", and protocol bumps are frequent. No date for leaving early access has been announced.
-Hosts and guides [Reported] recommend keeping production on Legacy and testing Enhanced on a second
-server. Asset Escrow is **not implemented** on Enhanced. Details: [references/timeline.md](references/timeline.md).
-
-## Core rules
-
-1. **One server = one platform.** A Legacy client cannot join an Enhanced server and vice versa;
-   separate server lists (one central list is only a long-term goal). Run two servers if you
-   need both. [Official]
-2. **Different binaries.** Enhanced: `cfx-server_win_x64` / `cfx-server-linux_x64` archive,
-   `cfx-server.exe`. Legacy: `server.7z` / `fx.tar.xz`, `FXServer.exe`. Server Download page has
-   a platform selector. Windows needs the **VC++ 2017 redistributable** (x64). [Official]
-3. **Keep cfx-server current.** Patches on 2026-08-13, 08-31, 09-22 and 09-30 changed the
-   protocol. If cfx-server is out of date, clients fail at the handshake. [Official]
-4. **Scripts mostly carry over; 3D assets do not.** Lua/JS/C# resources run with listed breaking
-   changes. Gen8 `.ydr/.ytd/.yft/.ydd/.ypt` must be converted to Gen9 (Alchemist) and should go in
-   `stream_enhanced/`. [Official + Reported]
-5. **No client mods.** Pure mode is always on; graphics mods are not allowed during early
-   access. Do not suggest ReShade/ASI/ScriptHook for Enhanced players. [Official]
+- "FiveM Enhanced" = **FiveM for GTAV Enhanced** (Gen9), early access since 2026-07-21; "Legacy" = Gen8.
+  Server binary `cfx-server.exe` (archives `cfx-server_win_x64` / `cfx-server-linux_x64`), not `FXServer.exe`.
+  If the user might mean a graphics pack instead, ask. History: [references/timeline.md](references/timeline.md).
+- **Keep cfx-server current.** Several patches (2026-08-13, 08-31, 09-22, 09-30) changed the protocol;
+  an outdated server makes clients fail at the handshake. Check this first when "nobody can connect". [Official]
+- **Scripts mostly carry over; 3D assets do not.** Gen8 `.ydr/.ytd/.yft/.ydd/.ypt` must be converted
+  (Alchemist) and go in `stream_enhanced/`. [Official]
+- **No client mods** (pure mode always on): never suggest ReShade/ASI/ScriptHook. **No Asset Escrow** yet. [Official]
+- One server serves one platform; Legacy and Enhanced need separate servers and `server.cfg` files. [Official]
 
 ## Legacy vs Enhanced differences
 

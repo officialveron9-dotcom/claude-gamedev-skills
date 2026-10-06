@@ -143,7 +143,7 @@ neue Zeile rein: **Fehlermeldung bzw. Symptom → Ursache → Lösung**.
 .claude-plugin/marketplace.json     Marketplace "gamedev-skills"
 plugins/<plugin>/skills/<skill>/    SKILL.md + references/ (Details, Fehlertabellen, Quellen)
 plugins/<plugin>/UPSTREAM.md        bei übernommenen Skills: Quelle, Lizenz, Commit
-scripts/                            Skills in Projekte kopieren, ZIPs für claude.ai bauen
+scripts/                            Skills in Projekte kopieren, ZIPs für claude.ai bauen, Skills prüfen
 docs/external-resources.md          gerankte externe Skills, MCP-Server und Tools
 research/                           Format der Skills/Plugins, welche fremden Skills man übernehmen darf
 ```

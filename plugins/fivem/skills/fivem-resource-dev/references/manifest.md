@@ -6,7 +6,7 @@ Read when writing/reviewing a manifest or when a resource fails to start / files
 
 | Directive | Notes / traps |
 |---|---|
-| `fx_version 'cerulean'` | Required. Missing -> warning `Resource X does not specify an fx_version in fxmanifest.lua.` `cerulean` makes NUI a secure context: callbacks must be `https://<res>/<cb>`, not `http://`. |
+| `fx_version 'cerulean'` | Required. Missing -> warning ``Resource X does not specify an `fx_version` in fxmanifest.lua.`` `cerulean` makes NUI a secure context: callbacks must be `https://<res>/<cb>`, not `http://`. |
 | `game 'gta5'` / `games {'gta5','rdr3'}` | Required since `adamant`. `common` = only CFX natives, no game natives. |
 | `lua54 'yes'` | Deprecated/no-op since June 2025 (Lua 5.3 removed, everything is 5.4). Harmless. |
 | `client_script(s)`, `server_script(s)`, `shared_script(s)` | Glob support. Extension picks runtime: `.lua`, `.js`, `.net.dll`. Load order = listed order. `@other/file.lua` loads a file from another resource (that resource must be started first or listed as dependency). |

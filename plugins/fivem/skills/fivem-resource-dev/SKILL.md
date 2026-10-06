@@ -143,7 +143,7 @@ Rules: assignment via `.state.x = v` replicates from server, not from clients; `
 ## NUI quick rules
 
 - `SendNUIMessage({ action = 'open', data = t })` -> page `window.addEventListener('message', e => ...)`.
-- Page -> Lua: `fetch(\`https://${GetParentResourceName()}/close\`, { method: 'POST', body: JSON.stringify(x) })` + `RegisterNUICallback('close', function(data, cb) ... cb({ ok = true }) end)`. **Always call `cb`**, else the fetch hangs.
+- Page -> Lua: ``fetch(`https://${GetParentResourceName()}/close`, { method: 'POST', body: JSON.stringify(x) })`` + `RegisterNUICallback('close', function(data, cb) ... cb({ ok = true }) end)`. **Always call `cb`**, else the fetch hangs.
 - Asset URLs inside the page: `https://cfx-nui-<resource>/path` (old `nui://` is not a secure context). That prefix is for files, not for callbacks.
 - `SetNuiFocus(true, true)` to take keyboard+mouse; always release on close/resource stop. Devtools: `nui_devTools` (F8) or `http://localhost:13172`.
 More in [references/nui.md](references/nui.md).
