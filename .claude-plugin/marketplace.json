@@ -1,6 +1,6 @@
 {
   "name": "gamedev-skills",
-  "description": "Skills for Unreal Engine 5, billiards game development, FiveM and FiveM for GTA V Enhanced: pitfalls, error fixes and correct patterns, plus curated MIT-licensed community skills.",
+  "description": "Skills for Unreal Engine 5, billiards game development, FiveM, FiveM for GTA V Enhanced and Brotato modding: pitfalls, error fixes and correct patterns, plus curated MIT-licensed community skills.",
   "owner": {
     "name": "officialveron9-dotcom"
   },
@@ -14,6 +14,11 @@
       "name": "fivem",
       "source": "./plugins/fivem",
       "description": "FiveM / Cfx.re: resources, frameworks (ESX, QBCore, Qbox, ox), security, performance and debugging, server setup, GTA V Enhanced."
+    },
+    {
+      "name": "brotato",
+      "source": "./plugins/brotato",
+      "description": "Brotato modding: Godot Mod Loader, script extensions, game internals, GDScript version pitfalls, online multiplayer."
     },
     {
       "name": "unreal-engine-reference",

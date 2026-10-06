@@ -1,0 +1,5 @@
+{
+  "name": "brotato",
+  "description": "Brotato modding pitfalls and fixes: Godot Mod Loader, script extensions, game internals, GDScript for the engine version Brotato uses, and online multiplayer netcode.",
+  "author": { "name": "officialveron9-dotcom" }
+}
