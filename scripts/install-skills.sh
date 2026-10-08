@@ -3,7 +3,7 @@
 # Aufruf:
 #   scripts/install-skills.sh <projektordner> [all|<plugin> ...]
 #   scripts/install-skills.sh --personal [all|<plugin> ...]
-# Plugins: unreal-engine, unreal-engine-reference, fivem, brotato, general-dev (Ordner unter plugins/).
+# Plugins: unreal-engine, unreal-engine-reference, fivem, brotato, general-dev, gamedev-general (Ordner unter plugins/).
 # Gleichnamige Skills im Ziel werden ueberschrieben.
 set -euo pipefail
 

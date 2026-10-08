@@ -29,6 +29,11 @@
       "name": "general-dev",
       "source": "./plugins/general-dev",
       "description": "Systematic debugging and verification before completion, from obra/superpowers (MIT)."
+    },
+    {
+      "name": "gamedev-general",
+      "source": "./plugins/gamedev-general",
+      "description": "Engine-neutral game-dev skills (performance, shaders, physics tuning, saves, game feel, Steam publishing) and general coding discipline (TDD, code review, codebase design, writing for agents, git commits), vendored from Apache-2.0/MIT sources."
     }
   ]
 }

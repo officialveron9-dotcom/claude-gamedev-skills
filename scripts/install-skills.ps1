@@ -1,6 +1,6 @@
 <#
 Kopiert die Skills in den .claude\skills-Ordner eines Projekts (oder nach ~\.claude\skills).
-Plugins: unreal-engine, unreal-engine-reference, fivem, brotato, general-dev (Ordner unter plugins\).
+Plugins: unreal-engine, unreal-engine-reference, fivem, brotato, general-dev, gamedev-general (Ordner unter plugins\).
 Ohne -Plugin werden alle installiert. Gleichnamige Skills im Ziel werden ueberschrieben.
 
 Beispiele:

@@ -19,6 +19,7 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 | `fivem` | 6 | eigene Recherche |
 | `brotato` | 7 | eigene Recherche |
 | `general-dev` | 2 | [obra/superpowers](https://github.com/obra/superpowers), MIT |
+| `gamedev-general` | 12 | [awesome-gamedev-agent-skills](https://github.com/gamedev-skills/awesome-gamedev-agent-skills) (Apache-2.0), [mattpocock/skills](https://github.com/mattpocock/skills) (MIT), [fvadicamo/dev-agent-skills](https://github.com/fvadicamo/dev-agent-skills) (MIT) |
 
 ### `unreal-engine` (eigene Skills)
 
@@ -62,6 +63,16 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 Brotato läuft auf **Godot 3**. Installiere keine Godot-4-Skills zusammen mit diesen, sonst schreibt Claude
 wieder Godot-4-Code. Externe Tools und Beispiel-Mods: [plugins/brotato/EXTERNAL.md](plugins/brotato/EXTERNAL.md).
 
+### `gamedev-general` (übernommen, engine-neutral)
+
+| Skill | Wofür |
+|---|---|
+| `performance-optimization`, `shader-programming`, `physics-tuning`, `save-systems`, `game-feel`, `steam-publish` | Engine-neutrale Spielentwicklung mit Workflow, Falsch-vs-Richtig-Code und Fehlertabellen; Beispiele in Godot 4/Unity, jede Datei nennt die Godot-3- und Unreal-Entsprechung |
+| `tdd`, `code-review`, `codebase-design`, `grilling`, `writing-for-agents` | Allgemeine Coding-Disziplin: erst Test, dann Code; Review-Checkliste; Architektur; Pläne vor großen Features durchfragen; gute `CLAUDE.md` schreiben |
+| `git-commit` | Saubere, kleine Commits mit guten Nachrichten |
+
+Passt zu allen drei Projekten. Die gerankte Gesamtliste mit weiteren Empfehlungen und Lücken: [docs/beste-skills-games-allgemein.md](docs/beste-skills-games-allgemein.md).
+
 ### `unreal-engine-reference` und `general-dev` (übernommen)
 
 - **`unreal-engine-reference`**: 31 tiefe UE-5.8-C++-Skills von quodsoler, z. B. GAS, Replikation,
@@ -76,9 +87,9 @@ wieder Godot-4-Code. Externe Tools und Beispiel-Mods: [plugins/brotato/EXTERNAL.
 
 | Projekt | Plugins |
 |---|---|
-| Unreal-Spiel | `unreal-engine`, `unreal-engine-reference`, `general-dev` |
+| Unreal-Spiel | `unreal-engine`, `unreal-engine-reference`, `general-dev`, `gamedev-general` |
 | FiveM-Server (Legacy oder Enhanced) | `fivem`, `general-dev` |
-| Brotato-Mod | `brotato`, `general-dev` |
+| Brotato-Mod | `brotato`, `general-dev`, `gamedev-general` |
 
 ### A) Claude Code im Web (claude.ai/code)
 
@@ -117,6 +128,7 @@ angemeldet sein (z. B. `gh auth login` und danach `gh auth setup-git`).
 /plugin install fivem@gamedev-skills
 /plugin install brotato@gamedev-skills
 /plugin install general-dev@gamedev-skills
+/plugin install gamedev-general@gamedev-skills
 ```
 
 Alternativ für alle Projekte auf einmal: `.\scripts\install-skills.ps1 -Personal -Plugin ...` kopiert

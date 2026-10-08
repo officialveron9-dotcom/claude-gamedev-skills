@@ -1,0 +1,5 @@
+{
+  "name": "gamedev-general",
+  "description": "Curated engine-neutral game-dev skills (performance profiling, shaders, physics timestep, save systems, game feel, Steam publishing) from gamedev-skills/awesome-gamedev-agent-skills (Apache-2.0) plus general coding-discipline skills (CLAUDE.md writing, TDD, deep-module design, two-axis code review, grilling, git commits) from mattpocock/skills and fvadicamo/dev-agent-skills (MIT).",
+  "author": { "name": "officialveron9-dotcom" }
+}
