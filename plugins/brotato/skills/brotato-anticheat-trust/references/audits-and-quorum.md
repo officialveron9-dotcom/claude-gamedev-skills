@@ -166,7 +166,7 @@ mismatch found after lobby lock). On the first reason: neutral toast, badge, `MS
 missed the message agree. The invalid flag never clears during a run.
 
 UI text rules: "Run not verified: state mismatch" / "Run not verified: seed" / "Run not verified: auth". No Steam
-ID, no slot, no colour on a player. Players keep playing; nothing is disabled except the ranked upload.
+ID, no slot, no colour on a player. Players keep playing; nothing is disabled except the entry into verified histories.
 
 ## 6. Run integrity (peer-verified run log)
 
@@ -184,10 +184,10 @@ func finish_run(won: bool) -> void:
 	# collect for 10 s; then
 	var verified := not run_state.invalid and seed_round.done \
 		and _all_slots_that_played_signed_same_hash(run_hash)
-	_save_run_file(run_hash, verified, run_state.reasons)   # user://<mod>/runs/<hex>.json: log, hashes, pubkeys, sigs
+	history.append_record(build_record(won, verified))      # user://<mod>/history.jsonl (witness-ranking.md §5)
 ```
 
 Badge rules: "peer-verified" only if `run_state.invalid` is false at the end, the seed round completed with all
 commits verified, and every slot that played signed the same `run_hash`. Anything else is "not verified" with the
 reasons listed. A reader of the file re-checks signatures against the embedded public keys and the Steam IDs; it
-cannot prove the peers did not collude. Ranked boards additionally need [ranked-backend.md](ranked-backend.md).
+cannot prove the peers did not collude. Showing scores to others: [witness-ranking.md](witness-ranking.md).

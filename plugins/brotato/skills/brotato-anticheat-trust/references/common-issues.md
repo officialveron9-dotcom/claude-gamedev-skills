@@ -27,11 +27,16 @@ Posture: the only in-game response is "run not verified". Rows below never lead 
 | `getAuthSessionTicket()` raises a parse error on load | Wrong argument count for that build | `Steam.call("getAuthSessionTicket")`; feature-detect with `Steam.has_method()` |
 | Ticket Dictionary has no `id` key | Older GodotSteam build names it differently | Log the Dictionary once; read `t.get("id", t.get("handle", 0))` |
 | Signature verifies on Windows, fails on Linux (or vice versa) | Signed a text (`JSON.print` float formatting, `\r\n` in PEM, locale) | Sign `sha256(canon(...))`; PEM via `save_to_string(true)` with `\r` stripped |
-| `Crypto.new()` is `null`, "Crypto is not available when the mbedtls module is disabled" | Custom engine build without mbedtls | Feature-detect; hash-only mode (no signatures, badge "unsigned", never ranked) |
+| `Crypto.new()` is `null`, "Crypto is not available when the mbedtls module is disabled" | Custom engine build without mbedtls | Feature-detect; hash-only mode (no signatures, badge "unsigned", no verified history) |
 | `The identifier "Crypto" isn't declared` | Non-Steam/console build or stripped engine | `ClassDB.class_exists("Crypto")` and `load()` the crypto script lazily |
 | Audit batch stutters the shop | All audits in one frame, string-keyed Dictionaries per enemy | Time-slice ≤ 2 ms per frame; audit ledgers, not entities |
 | "Verified" badge shown although a peer disconnected mid-run | Missing signature not treated as failure | Badge only if every slot that played signed the same run hash; disconnect mid-wave → `invalid: disconnect` |
 | Honest client's run invalidated for speed | Host clamps with base speed, not host-side stats (speed items, dash, slow effects) | Compute the cap from host-side stats per tick, tolerance ×1.3, clamp silently, invalidate only on sustained violations |
 | Gold ledger drifts by small amounts | Material value rounding, bonus gold items, selling | Integer ledger from host events (pickup value, sale value); tolerance +10 % and ≥ 2 waves in a row before a finding |
-| Backend rejects every ticket (`result != OK`) | Session ticket instead of Web API ticket, wrong identity string, user key instead of publisher key | `getAuthTicketForWebApi("<identity>")`, same identity on the server, publisher key (see ranked-backend.md) |
-| Upload never starts (`ERR_BUSY`) | One `HTTPRequest` reused while a request runs | Queue uploads; one node per in-flight request |
+| Friend's best shows "unverified" although you played that run together | Your own record was never written (crash before `append_record`), or their vouch signature is over the wrong bytes | Append the record before the end screen; vouch = sign over `sha256(batch_hash ‖ session_nonce)` |
+| A player's records all show "mismatch" | Their key changed (reinstall) or another install uses their Steam ID | By design: keep the old pin; new identity for ranking; tell them in the UI |
+| Received batch ignored | Sender's ticket not `ok`, batch > 32 KB, or sender not in `players` of its records | One batch per peer per lobby ≤ 32 KB; bests only; forwarding is not vouching |
+| `Error parsing JSON` on history load | Truncated last line after a crash | Skip unparsable lines (JSON lines store); never rewrite the file on load |
+| Steam IDs in records come back as floats | `JSON.parse` turns every number into float | Store IDs and seeds as strings in records |
+| Verified bests vanish when a friend leaves the lobby | By design: the witness left | Keep your own records; vouched ones are shown only while the witness is present |
+| Someone proposes "just use Steam leaderboards" | Any client can upload any score under app 1942280; no server to check | Never. See SKILL.md §9 |

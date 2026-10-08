@@ -39,7 +39,8 @@ checked (Brotatogether, BrotatoOnline, BroTangto) does any of this.
 | + combined seed + client audits + all-to-all hashes, fail-closed (this skill) | Host RNG choice, host equivocation, most host value edits (within bounds), mod-set drift | Host cheats inside tolerance; cosmetic-only edits; collusion; local-only cheats (SKILL.md §8) | 1 reliable round at lobby lock; 1 hash + ≤ 1 audit batch per wave per peer; ~400 lines | **Recommended** |
 | Split authority (each peer owns its player's gold/items/stats; host owns enemies/waves; everyone validates) | Host edits to other players | Every client can now edit itself; host must audit N peers; conflicts on shared shop | Protocol rewrite, more races | No |
 | Full deterministic lockstep + cross-hash | Everything except equal-input cheats | Not reachable: Brotato's global RNG is shared with cosmetics, nodes are pooled, physics is frame-timed (`brotato-online-multiplayer` §2) | Rewrite of the game | No |
-| Backend for ranked boards ([ranked-backend.md](ranked-backend.md)) | Identity fraud, edited run files, implausible totals | Cannot re-simulate; same blind spots as the audits | Hosting, publisher Web API key (blocker), ~1 week | Only for ranking |
+| Witness-model histories ([witness-ranking.md](witness-ranking.md)) | Forged records shown to non-participants, edited records, key swaps | Collusion of all participants; nothing for people who never play together | ~250 lines, one batch per lobby | **Recommended** for scores |
+| Any server / global board ([optional-backend.md](optional-backend.md)) | - | - | Owner's rule: no server, ever; a global board without one is forgeable by anyone | **Never** |
 | Witness peer (one client re-runs host logic for a sample of events) | Same as audits, finer | Same as audits | Pick a random client per wave as auditor to spread CPU; only when 3+ peers | Optional extension |
 
 ## 3. What a mod cannot do (don't promise it)
@@ -48,7 +49,7 @@ checked (Brotatogether, BrotatoOnline, BroTangto) does any of this.
   A modified mod can report any `mods` hash it likes. Valheim's CatosAntiCheat README says the same about plugin
   lists; koumodgp's process/window-name signatures kick on any match (false positives). Don't copy that.
 - No proof that a run was honest: peer signatures prove that these peers agreed, not that none of them lied.
-  Call the badge "peer-verified"; call ranked runs "server-verified" only after [ranked-backend.md](ranked-backend.md).
+  Call the badge "peer-verified"; there is no "server-verified" (no server, ever).
 - No enforcement: kicks and bans are deliberately off ([optional-moderation.md](optional-moderation.md)).
 
 ## 4. Cost and complexity budget
@@ -63,4 +64,5 @@ checked (Brotatogether, BrotatoOnline, BroTangto) does any of this.
 | Run state + run log + signatures | one `RUN_INVALID` on first finding; one ≤ 1 KB message per peer at run end | RSA sign ms; keygen once | ~100 lines |
 
 Do it in this order: hashes all-to-all (cheap, catches desync bugs too) → run state badge → commit-reveal → shop
-re-derivation → gold/item ledgers → auth tickets → run log → backend. Stop where the fun/benefit ratio drops.
+re-derivation → gold/item ledgers → auth tickets → run records → witness exchange. Stop where the fun/benefit
+ratio drops.

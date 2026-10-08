@@ -1,4 +1,9 @@
-# Ranked submissions: what a backend must do (and cannot do)
+# Optional backend design (NOT possible for this project; kept for reference)
+
+**Owner's rule: there will be no server of any kind, ever.** This file documents what a server would have to do
+so that nobody re-proposes one as a shortcut. Ranking is done with the witness model instead
+([witness-ranking.md](witness-ranking.md)); the reasons a global leaderboard cannot be secured without a server
+are in SKILL.md §9.
 
 Peer signatures prove that the peers agreed, not that they were honest. A ranked leaderboard needs a server that
 binds each signature to a Steam account and re-checks the consistency evidence. It does **not** re-simulate the run:
