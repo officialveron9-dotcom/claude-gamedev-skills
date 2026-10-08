@@ -17,7 +17,7 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 | `unreal-engine` | 11 | eigene Recherche |
 | `unreal-engine-reference` | 31 | [quodsoler/unreal-engine-skills](https://github.com/quodsoler/unreal-engine-skills), MIT |
 | `fivem` | 6 | eigene Recherche |
-| `brotato` | 6 | eigene Recherche |
+| `brotato` | 7 | eigene Recherche |
 | `general-dev` | 2 | [obra/superpowers](https://github.com/obra/superpowers), MIT |
 
 ### `unreal-engine` (eigene Skills)
@@ -57,6 +57,7 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 | `brotato-stability-performance` | Gegen Lag, Abstürze und Verbindungsabbrüche: Pooling, freigegebene Nodes, CrashReporter, Release-Checkliste |
 | `brotato-ui-qol` | Optionsmenü-Tabs, Mod-Einstellungen (`ModLoaderConfig`), Tastenbelegung im Koop, HUD-Overlays, Übersetzungen, sicheres Speichern |
 | `brotato-dev-workflow` | Schneller Entwicklungskreislauf: Editor vs. echtes Spiel, Mod-Loader-Flags, Tests ohne Spiel-Fenster, `gdlint`/`gdformat`, Packen, Workshop-Upload, CI |
+| `brotato-anticheat-trust` | Gegenseitige Kontrolle im Koop, auch des Hosts: Commit-Reveal-Seed, Clients prüfen Shop/Drops/Schaden nach, Hash-Quorum, Steam-Auth-Tickets, Vote-Kick, „verifizierter Run“ |
 
 Brotato läuft auf **Godot 3**. Installiere keine Godot-4-Skills zusammen mit diesen, sonst schreibt Claude
 wieder Godot-4-Code. Externe Tools und Beispiel-Mods: [plugins/brotato/EXTERNAL.md](plugins/brotato/EXTERNAL.md).
