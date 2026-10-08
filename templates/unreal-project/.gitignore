@@ -1,0 +1,26 @@
+# Unreal Engine (Vorlage aus gamedev-skills/templates/unreal-project)
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+Build/
+Plugins/*/Binaries/
+Plugins/*/Intermediate/
+.vs/
+.vsconfig
+*.sln
+*.VC.db
+*.VC.opendb
+*.opensdf
+*.sdf
+*.suo
+*.xcodeproj
+*.xcworkspace
+.idea/
+compile_commands.json
+.cache/
+
+# Claude Code: lokale Einstellungen und private Notizen
+.claude/settings.local.json
+CLAUDE.local.md
+.agents/*.local.md

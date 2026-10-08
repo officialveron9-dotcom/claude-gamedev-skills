@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(luacheck *)",
+      "Bash(lua-language-server *)",
+      "WebFetch(domain:docs.fivem.net)",
+      "WebFetch(domain:forum.cfx.re)",
+      "WebFetch(domain:overextended.dev)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(git reset *)",
+      "Bash(git checkout *)"
+    ],
+    "deny": [
+      "Read(secrets.cfg)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./txData/**)",
+      "Read(./cache/**)",
+      "Edit(./cache/**)",
+      "Edit(**/*.fxap)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/lint-lua.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

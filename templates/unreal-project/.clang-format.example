@@ -1,0 +1,17 @@
+# Beispiel-Stil im Unreal-Look (Allman-Klammern, Tabs). TODO pruefen: an den eigenen Code anpassen,
+# dann nach .clang-format umbenennen. Erst damit wird der Hook .claude/hooks/format-cpp.sh aktiv.
+# Beim ersten Lauf auf bestehendem Code entsteht ein grosser Diff - bewusst in einem eigenen Commit machen.
+BasedOnStyle: Microsoft
+UseTab: Always
+IndentWidth: 4
+TabWidth: 4
+ColumnLimit: 0
+BreakBeforeBraces: Allman
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+PointerAlignment: Left
+NamespaceIndentation: All
+AccessModifierOffset: -4
+SortIncludes: false
+IndentCaseLabels: true

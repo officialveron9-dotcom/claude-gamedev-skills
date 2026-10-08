@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(gdlint *)",
+      "Bash(gdformat *)",
+      "Bash(python tools/build_zip.py *)",
+      "Bash(python -m zipfile *)",
+      "WebFetch(domain:wiki.godotmodding.com)",
+      "WebFetch(domain:docs.godotengine.org)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(git reset *)",
+      "Bash(git checkout *)"
+    ],
+    "deny": [
+      "Edit(./reference/**)",
+      "Edit(**/*.pck)",
+      "Read(**/*.pck)",
+      "Read(./.env)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/lint-gd.sh",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}

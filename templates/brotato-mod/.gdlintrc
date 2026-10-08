@@ -1,0 +1,54 @@
+# gdlint-Konfiguration (gdtoolkit 3.x fuer Godot 3). Basis: `gdlint -d` (Default-Dump von gdlint 3.6.0),
+# angepasst fuer Brotato-Mods. Wird von gdlint ab dem Arbeitsverzeichnis aufwaerts gesucht (gdlintrc oder .gdlintrc).
+disable:
+  - private-method-call   # Extensions rufen bewusst ._private_method() der Vanilla-Klasse auf
+excluded_directories:
+  - .git
+  - reference             # dekompiliertes Spiel nicht linten
+  - dist
+  - .import
+# Formatchecks (gdformat schreibt Tabs und 100 Zeichen)
+max-line-length: 100
+max-file-lines: 1000
+tab-characters: 1
+trailing-whitespace: null
+mixed-tabs-and-spaces: null
+# Namen (Godot-3-Stil; _on_NodeName_signal ist erlaubt)
+function-name: (_on_([A-Z][a-z0-9]*)+(_[a-z0-9]+)*|_?[a-z][a-z0-9]*(_[a-z0-9]+)*)
+class-name: ([A-Z][a-z0-9]*)+
+sub-class-name: _?([A-Z][a-z0-9]*)+
+signal-name: '[a-z][a-z0-9]*(_[a-z0-9]+)*'
+class-variable-name: _?[a-z][a-z0-9]*(_[a-z0-9]+)*
+class-load-variable-name: (([A-Z][a-z0-9]*)+|_?[a-z][a-z0-9]*(_[a-z0-9]+)*)
+function-variable-name: '[a-z][a-z0-9]*(_[a-z0-9]+)*'
+function-preload-variable-name: ([A-Z][a-z0-9]*)+
+function-argument-name: _?[a-z][a-z0-9]*(_[a-z0-9]+)*
+loop-variable-name: _?[a-z][a-z0-9]*(_[a-z0-9]+)*
+enum-name: ([A-Z][a-z0-9]*)+
+enum-element-name: '[A-Z][A-Z0-9]*(_[A-Z0-9]+)*'
+constant-name: '[A-Z][A-Z0-9]*(_[A-Z0-9]+)*'
+load-constant-name: (([A-Z][a-z0-9]*)+|[A-Z][A-Z0-9]*(_[A-Z0-9]+)*)
+# Basis- und Klassenchecks
+duplicated-load: null
+expression-not-assigned: null
+unnecessary-pass: null
+unused-argument: null
+comparison-with-itself: null
+no-elif-return: null
+no-else-return: null
+class-definitions-order:
+  - tools
+  - classnames
+  - extends
+  - signals
+  - enums
+  - consts
+  - exports
+  - pubvars
+  - prvvars
+  - onreadypubvars
+  - onreadyprvvars
+  - others
+# Design
+max-public-methods: 20
+function-arguments-number: 10

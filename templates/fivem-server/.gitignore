@@ -1,0 +1,17 @@
+# FiveM server-data (Vorlage aus gamedev-skills/templates/fivem-server)
+secrets.cfg
+cache/
+txData/
+*.log
+logs/
+.lls-log/
+node_modules/
+resources/**/node_modules/
+*.sql.bak
+*.dump
+.env
+.env.*
+
+# Claude Code: lokale Einstellungen und private Notizen
+.claude/settings.local.json
+CLAUDE.local.md

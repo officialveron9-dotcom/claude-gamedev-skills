@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(clang-format *)",
+      "Read(//c/Program Files/Epic Games/UE_5.8/Engine/Source/**)",
+      "Read(//c/Program Files/Epic Games/UE_5.8/Engine/Plugins/**)",
+      "WebFetch(domain:dev.epicgames.com)",
+      "WebFetch(domain:forums.unrealengine.com)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(git reset *)",
+      "Bash(git checkout *)"
+    ],
+    "deny": [
+      "Edit(./Binaries/**)",
+      "Edit(./Intermediate/**)",
+      "Edit(./DerivedDataCache/**)",
+      "Edit(./Saved/**)",
+      "Edit(./Content/**/*.uasset)",
+      "Edit(./Content/**/*.umap)",
+      "Read(./.env)",
+      "Read(./.env.*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/format-cpp.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "unreal-api": {
+      "command": "uvx",
+      "args": ["unreal-api-mcp"],
+      "env": {
+        "UNREAL_VERSION": "5.8"
+      }
+    },
+    "unreal-mcp": {
+      "type": "http",
+      "url": "http://127.0.0.1:8000/mcp"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+# Brotato-Mod (Vorlage aus gamedev-skills/templates/brotato-mod)
+# Dekompiliertes Spiel und Spieldateien: nur lokal, nie veroeffentlichen
+reference/
+*.pck
+*.pck.*
+Brotato*.exe
+steam_appid.txt
+
+# Build-Ausgabe
+dist/
+*.zip
+
+# Godot-Editor-Reste (aus dem dekompilierten Projekt), Logs, Python
+.import/*.md5
+logs/
+*.log
+__pycache__/
+*.pyc
+.venv/
+
+# Claude Code: lokale Einstellungen und private Notizen
+.claude/settings.local.json
+CLAUDE.local.md

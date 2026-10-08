@@ -131,6 +131,14 @@ die Skills nach `~/.claude/skills/`.
 Falls ein Upload wegen zu langer Beschreibung abgelehnt wird, lass Claude die `description` im
 jeweiligen `SKILL.md` kürzen.
 
+## Projekt-Vorlagen und Tools
+
+- **[templates/](templates/README.md)**: fertige `CLAUDE.md`, `.claude/settings.json` mit Hooks (Lint nach jeder Änderung),
+  Linter-Configs und `.gitignore` für ein Unreal-Projekt, einen FiveM-Server und eine Brotato-Mod. Einmal ins
+  Projekt kopieren, dann kennt Claude dort Befehle, Regeln und Prüfungen.
+- **[docs/tools-und-sdks.md](docs/tools-und-sdks.md)**: geprüfte Tools und SDKs gegen Lag, Abstürze und Desync,
+  mit Installationsbefehlen und der Angabe, ob sie in Cloud-Sessions oder nur lokal funktionieren.
+
 ## Empfohlene Plugins zusätzlich (lokal)
 
 Gut bewertete Sammlungen, die man besser installiert als kopiert. Die volle, gerankte Liste mit
@@ -164,7 +172,9 @@ neue Zeile rein: **Fehlermeldung bzw. Symptom → Ursache → Lösung**.
 plugins/<plugin>/skills/<skill>/    SKILL.md + references/ (Details, Fehlertabellen, Quellen)
 plugins/<plugin>/UPSTREAM.md        bei übernommenen Skills: Quelle, Lizenz, Commit
 scripts/                            Skills in Projekte kopieren, ZIPs für claude.ai bauen, Skills prüfen
+templates/                          CLAUDE.md, .claude/settings.json mit Hooks, Linter-Configs je Projekt (siehe templates/README.md)
 docs/external-resources.md          gerankte externe Skills, MCP-Server und Tools
+docs/tools-und-sdks.md              geprüfte Tool-/SDK-Tabellen je Projekt (Lag, Crashes, Desync, Claude-Code-Plugins)
 research/                           Format der Skills/Plugins, welche fremden Skills man übernehmen darf
 ```
 
