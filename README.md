@@ -1,7 +1,7 @@
 # Gamedev-Skills für Claude
 
 Skills, die Claude beim Programmieren für **Unreal Engine 5** (Billard-Spiel mit hoher Grafik),
-**FiveM**, **FiveM für GTA V Enhanced** und **Brotato-Mods** (Godot) fehlendes Wissen geben: Entwicklungsfallen,
+**FiveM**, **FiveM für GTA V Enhanced**, **Brotato-Mods** (Godot) und **Web-Projekte** fehlendes Wissen geben: Entwicklungsfallen,
 Fehlermeldung → Ursache → Lösung, richtige Code-Muster und Checklisten. Hintergrundwissen,
 das Claude ohnehin kennt, ist bewusst weggelassen.
 
@@ -20,6 +20,7 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 | `brotato` | 7 | eigene Recherche |
 | `general-dev` | 2 | [obra/superpowers](https://github.com/obra/superpowers), MIT |
 | `gamedev-general` | 12 | [awesome-gamedev-agent-skills](https://github.com/gamedev-skills/awesome-gamedev-agent-skills) (Apache-2.0), [mattpocock/skills](https://github.com/mattpocock/skills) (MIT), [fvadicamo/dev-agent-skills](https://github.com/fvadicamo/dev-agent-skills) (MIT) |
+| `web-dev` | 12 | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills), [pproenca/dot-skills](https://github.com/pproenca/dot-skills), [addyosmani](https://github.com/addyosmani/web-quality-skills), [anthropics/skills](https://github.com/anthropics/skills), [testdino-hq](https://github.com/testdino-hq/playwright-skill), [supabase/agent-skills](https://github.com/supabase/agent-skills), [mcollina/skills](https://github.com/mcollina/skills) u. a. (MIT/Apache-2.0) |
 
 ### `unreal-engine` (eigene Skills)
 
@@ -73,6 +74,18 @@ wieder Godot-4-Code. Externe Tools und Beispiel-Mods: [plugins/brotato/EXTERNAL.
 
 Passt zu allen drei Projekten. Die gerankte Gesamtliste mit weiteren Empfehlungen und Lücken: [docs/beste-skills-games-allgemein.md](docs/beste-skills-games-allgemein.md).
 
+### `web-dev` (übernommen, für Websites und Web-Apps)
+
+| Skill | Wofür |
+|---|---|
+| `vercel-react-best-practices`, `react-19-best-practices`, `nextjs-16-app-router`, `tailwind-v4-best-practices` | Aktuelle Framework-Versionen statt veralteter APIs: Server/Client Components, Hydration, Wasserfälle, Bundle-Größe, Tailwind v4 |
+| `wcag-accessibility`, `core-web-vitals`, `security-and-hardening` | Barrierefreiheit (WCAG 2.2), Ladezeit-Metriken, OWASP-Sicherheit (XSS, CSRF, Auth, Secrets) |
+| `webapp-testing`, `playwright-core` | Web-Apps im Browser testen, flaky Tests vermeiden |
+| `dependency-verification` | Erfundene npm-Pakete erkennen, bevor sie installiert werden |
+| `supabase-postgres-best-practices`, `nodejs-best-practices` | Datenbank-Schema und Abfragen, Node.js-Backend |
+
+Nur für Web-Projekte installieren. Gerankte Gesamtliste mit weiteren Empfehlungen und Lücken: [docs/beste-skills-web.md](docs/beste-skills-web.md).
+
 ### `unreal-engine-reference` und `general-dev` (übernommen)
 
 - **`unreal-engine-reference`**: 31 tiefe UE-5.8-C++-Skills von quodsoler, z. B. GAS, Replikation,
@@ -90,6 +103,7 @@ Passt zu allen drei Projekten. Die gerankte Gesamtliste mit weiteren Empfehlunge
 | Unreal-Spiel | `unreal-engine`, `unreal-engine-reference`, `general-dev`, `gamedev-general` |
 | FiveM-Server (Legacy oder Enhanced) | `fivem`, `general-dev` |
 | Brotato-Mod | `brotato`, `general-dev`, `gamedev-general` |
+| Website / Web-App | `web-dev`, `general-dev` |
 
 ### A) Claude Code im Web (claude.ai/code)
 
@@ -129,6 +143,7 @@ angemeldet sein (z. B. `gh auth login` und danach `gh auth setup-git`).
 /plugin install brotato@gamedev-skills
 /plugin install general-dev@gamedev-skills
 /plugin install gamedev-general@gamedev-skills
+/plugin install web-dev@gamedev-skills
 ```
 
 Alternativ für alle Projekte auf einmal: `.\scripts\install-skills.ps1 -Personal -Plugin ...` kopiert

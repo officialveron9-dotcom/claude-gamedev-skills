@@ -1,0 +1,5 @@
+{
+  "name": "web-dev",
+  "description": "Curated web development skills (React 19, Next.js 16, Tailwind v4, Node.js 22+, Postgres, WCAG 2.2, Core Web Vitals, OWASP hardening, Playwright E2E, browser verification, npm hallucination check) vendored from Vercel, Addy Osmani, Anthropic, Supabase, Matteo Collina, TestDino, pproenca and athola (MIT / Apache-2.0).",
+  "author": { "name": "officialveron9-dotcom" }
+}

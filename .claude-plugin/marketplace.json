@@ -1,6 +1,6 @@
 {
   "name": "gamedev-skills",
-  "description": "Skills for Unreal Engine 5, billiards game development, FiveM, FiveM for GTA V Enhanced and Brotato modding: pitfalls, error fixes and correct patterns, plus curated MIT-licensed community skills.",
+  "description": "Skills for Unreal Engine 5, billiards game development, FiveM, FiveM for GTA V Enhanced, Brotato modding, engine-neutral game development and web development: pitfalls, error fixes and correct patterns, plus curated MIT/Apache-licensed community skills.",
   "owner": {
     "name": "officialveron9-dotcom"
   },
@@ -34,6 +34,11 @@
       "name": "gamedev-general",
       "source": "./plugins/gamedev-general",
       "description": "Engine-neutral game-dev skills (performance, shaders, physics tuning, saves, game feel, Steam publishing) and general coding discipline (TDD, code review, codebase design, writing for agents, git commits), vendored from Apache-2.0/MIT sources."
+    },
+    {
+      "name": "web-dev",
+      "source": "./plugins/web-dev",
+      "description": "Web development skills vendored from Vercel, dot-skills, Addy Osmani, Anthropic, TestDino, Supabase and others (MIT/Apache-2.0): React 19, Next.js 16, Tailwind v4, accessibility, Core Web Vitals, security, testing, dependency verification, Postgres, Node.js."
     }
   ]
 }
