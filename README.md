@@ -17,7 +17,7 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 | `unreal-engine` | 11 | eigene Recherche |
 | `unreal-engine-reference` | 31 | [quodsoler/unreal-engine-skills](https://github.com/quodsoler/unreal-engine-skills), MIT |
 | `fivem` | 6 | eigene Recherche |
-| `brotato` | 4 | eigene Recherche |
+| `brotato` | 5 | eigene Recherche |
 | `general-dev` | 2 | [obra/superpowers](https://github.com/obra/superpowers), MIT |
 
 ### `unreal-engine` (eigene Skills)
@@ -55,6 +55,7 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 | `godot3-gdscript-pitfalls` | Verhindert Godot-4-Syntax in Godot-3-Code (`export`, `yield`, `connect`, `.method()` …), Engine-Fallen |
 | `brotato-online-multiplayer` | Online-Koop über Steam-Lobbys und P2P: Host-Autorität, Zufall synchronisieren, Snapshots, Desync-Fixes |
 | `brotato-stability-performance` | Gegen Lag, Abstürze und Verbindungsabbrüche: Pooling, freigegebene Nodes, CrashReporter, Release-Checkliste |
+| `brotato-ui-qol` | Optionsmenü-Tabs, Mod-Einstellungen (`ModLoaderConfig`), Tastenbelegung im Koop, HUD-Overlays, Übersetzungen, sicheres Speichern |
 
 Brotato läuft auf **Godot 3**. Installiere keine Godot-4-Skills zusammen mit diesen, sonst schreibt Claude
 wieder Godot-4-Code. Externe Tools und Beispiel-Mods: [plugins/brotato/EXTERNAL.md](plugins/brotato/EXTERNAL.md).
