@@ -16,10 +16,11 @@ Rules:
 - The `slot`, `steam_id` or `player_index` **inside** a payload is never trusted. Map `sender → slot` on the host
   and `sender == host_id` for host-only message types on clients. Drop and log the rest.
 - Keep the host identity from the lobby data key `host` (set at creation), not from `getLobbyOwner()`.
-- Never send to or accept from a Steam ID that is not in the current member set and not banned.
+- Never send to or accept from a Steam ID that is not in the current member set.
 
 ## 2. Steam auth session tickets (mutual, at join)
 
+Any result other than OK, at join or later, invalidates the run; nobody is refused or kicked.
 What a validated ticket proves: this Steam ID is online right now, owns the app (or borrows it: `owner_id !=
 auth_id`), is not VAC- or publisher-banned, and the ticket was issued for you (identity-bound tickets) and not
 reused. It proves nothing about mod files.
@@ -60,6 +61,8 @@ func _on_auth_ticket_msg(sender: int, msg: Dictionary) -> void:
 		Steam.endAuthSession(sender)                    # else BEGIN_AUTH_SESSION_RESULT_DUPLICATE_REQUEST (2)
 	var r: int = Steam.beginAuthSession(msg["buf"], int(msg["size"]), sender)
 	_auth_state[sender] = "pending" if r == Steam.BEGIN_AUTH_SESSION_RESULT_OK else "fail:%d" % r
+	if r != Steam.BEGIN_AUTH_SESSION_RESULT_OK:
+		run_state.invalidate("auth")
 
 func _on_peer_validated(auth_id: int, response: int, owner_id: int) -> void:
 	# (Godot 3 `match` also accepts `Steam.X` patterns; if/elif keeps the multi-code branches readable)
@@ -67,12 +70,15 @@ func _on_peer_validated(auth_id: int, response: int, owner_id: int) -> void:
 		_auth_state[auth_id] = "shared" if owner_id != auth_id else "ok"
 	elif response == Steam.AUTH_SESSION_RESPONSE_USER_NOT_CONNECTED_TO_STEAM \
 			or response == Steam.AUTH_SESSION_RESPONSE_AUTH_TICKET_CANCELED:
-		_auth_state[auth_id] = "offline"                 # fires LATER too: grace 30 s, then treat as disconnected
+		_auth_state[auth_id] = "offline"                 # fires LATER too: also a disconnect signal
+		run_state.invalidate("auth")                     # fail closed; the player keeps playing
 	elif response == Steam.AUTH_SESSION_RESPONSE_VAC_BANNED \
 			or response == Steam.AUTH_SESSION_RESPONSE_PUBLISHER_ISSUED_BAN:
-		_auth_state[auth_id] = "fail:%d" % response      # host: refuse the slot; clients: toast
+		_auth_state[auth_id] = "fail:%d" % response
+		run_state.invalidate("auth")                     # no refusal, no kick: run not verified
 	else:
 		_auth_state[auth_id] = "fail:%d" % response
+		run_state.invalidate("auth")
 
 func on_peer_left(remote_id: int) -> void:
 	Steam.endAuthSession(remote_id)
@@ -149,7 +155,7 @@ func verify_digest(digest: PoolByteArray, sig: PoolByteArray, key: CryptoKey) ->
 
 Sign **digests of canonical bytes** (`sha256(canon(parts))`), never JSON text: `JSON.print` float formatting,
 `\r\n` and locale differences are why "valid on Windows, invalid on Linux" happens. Snapshot the public keys at
-lobby lock; a peer that changes its `pub` mid-run is a finding.
+lobby lock; a peer that changes its `pub` mid-run invalidates the run (`auth`).
 
 ## 5. HMAC for ENet or extra-cheap per-message MACs (optional)
 

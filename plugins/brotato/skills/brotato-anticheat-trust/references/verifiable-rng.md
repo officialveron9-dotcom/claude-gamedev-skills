@@ -9,8 +9,8 @@ Godot 3 GDScript. Builds on `brotato-online-multiplayer` §6 (host rolls, privat
   peer to one secret before anyone sees the others. The run seed is a hash over all secrets, so changing it needs
   every peer's cooperation.
 - Remaining weakness: the **last revealer** sees all other secrets and can abort instead of revealing (one bit of
-  bias per abort). Counter: an abort restarts the round with fresh secrets for everyone, and a peer that fails to
-  reveal twice is flagged. In co-op that is enough.
+  bias per abort). Counter: an abort restarts the round with fresh secrets for everyone, and a second failure
+  makes the run invalid (unranked) from wave 1. Re-rolling then has nothing to gain. In co-op that is enough.
 - Lockstep-style per-action commitments (hash now, reveal next tick) are not needed: clients don't make hidden
   decisions that need protection, and they cost a round trip per tick.
 
@@ -24,8 +24,9 @@ Godot 3 GDScript. Builds on `brotato-online-multiplayer` §6 (host rolls, privat
 | `SEED_ABORT` | host → all | `round`, `reason`, `missing` IDs | Starts a new round; counts a strike for `missing` |
 | `SEED_FINAL` | host → all | `round`, `run_seed` | Optional cross-check; every peer must have computed the same |
 
-Timeouts: commits 5 s, reveals 5 s. On timeout the host sends `SEED_ABORT`. Two strikes for the same peer → host
-UI offers a kick. Late joiners (between waves) receive `round`, all commits and all reveals in the resync payload
+Timeouts: commits 5 s, reveals 5 s. On timeout the host sends `SEED_ABORT` and starts one fresh round. If the
+second round fails too, the host starts the run with its own seed and every peer calls
+`run_state.invalidate("seed")`: the run is playable but never verified. Nobody is named. Late joiners (between waves) receive `round`, all commits and all reveals in the resync payload
 and verify them; the seed never changes during a run.
 
 ## 3. Code
@@ -187,9 +188,9 @@ The host fills `ShopItem`s from `out` (see `fill_shop_items` (hook) in `brotato-
 
 | Case | Do |
 |---|---|
-| A peer never commits | Abort after 5 s, new round without a strike (could be loss); strike on the second time |
-| A peer commits but never reveals | Abort, strike. Never finish with a subset |
-| A peer reveals a secret that doesn't match | Hard finding (score 10), keep commit + secret as evidence, abort round |
+| A peer never commits | Abort after 5 s, one new round (could be loss); second failure → run invalid (`seed`) |
+| A peer commits but never reveals | Abort, same rule. Never finish with a subset |
+| A peer reveals a secret that doesn't match | Run invalid (`seed`) immediately; keep commit + secret in the local log; no UI name |
 | Host disconnects during the round | Session ends anyway (no host migration) |
 | Two players only | Still worth it: neither can pick the seed alone. Audits of the other are symmetric |
 | Peer joins between waves | Send round, commits, reveals; it verifies and uses the same `run_seed` |
@@ -199,7 +200,7 @@ The host fills `ShopItem`s from `out` (see `fill_shop_items` (hook) in `brotato-
 ## 7. Tests
 
 - Three peers, one with a patched `on_reveal` that sends a different secret → the other two log a commit mismatch
-  and abort.
+  and the run is marked invalid on all three (the badge must appear on the cheater's screen too).
 - Simulated 30 % loss on the control channel → rounds complete after retries (reliable channel), no strikes.
 - Same `run_seed` printed on all peers; same shop offers re-derived on the client; a one-byte change in `ctx`
   makes the re-derivation fail (so `ctx` is complete).

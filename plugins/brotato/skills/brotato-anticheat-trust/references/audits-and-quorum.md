@@ -1,27 +1,23 @@
-# Audits, all-to-all hashes, quorum, responses, run integrity
+# Audits, all-to-all hashes, diagnostic quorum, run state, run integrity
 
 Godot 3 GDScript. Audits run on **clients against the host** (and on the host against clients for the few things
-clients own). Everything is scored and logged; nothing acts automatically except packet drops and clamps.
+clients own). Everything is scored and logged locally; the only consequence is `run_state.invalidate()`. No kick,
+no vote, no name in the UI ([optional-moderation.md](optional-moderation.md) is off by default).
 
 ## 1. Audit framework
 
 ```gdscript
-# audit_log.gd  (autoload-like node under the mod's net node)
+# audit_log.gd  (node under the mod's net node)
 extends Node
 
-signal warn(subject, kind)
-signal run_unverified(subject)
-signal vote_requested(subject)
+signal invalidated(reason)
 
 enum Sev { MINOR = 1, MAJOR = 5, HARD = 10 }
-const WARN_AT := 5
-const UNVERIFIED_AT := 10
-const VOTE_AT := 20
+const INVALID_AT := 10
 
-var score := {}          # steam_id -> int
+var score := {}          # steam_id -> int  (diagnostic only; never shown)
 var findings := []       # [{wave, tick, subject, kind, expected, got, sev}]
 var baseline_wave := 0   # audits ignored up to and including this wave (late join, resync)
-var run_unverified := false
 
 func record(subject: int, kind: String, expected, got, sev: int) -> void:
 	if RunData.current_wave <= baseline_wave:
@@ -29,13 +25,8 @@ func record(subject: int, kind: String, expected, got, sev: int) -> void:
 	findings.append({"wave": RunData.current_wave, "tick": OS.get_ticks_msec(), "subject": subject,
 		"kind": kind, "expected": str(expected), "got": str(got), "sev": sev})
 	score[subject] = score.get(subject, 0) + sev
-	if score[subject] >= UNVERIFIED_AT and not run_unverified:
-		run_unverified = true
-		emit_signal("run_unverified", subject)
-	elif score[subject] >= WARN_AT:
-		emit_signal("warn", subject, kind)
-	if score[subject] >= VOTE_AT:
-		emit_signal("vote_requested", subject)
+	if score[subject] >= INVALID_AT:
+		emit_signal("invalidated", "audit")        # run_state.invalidate("audit"); UI text is neutral
 
 func reset_baseline() -> void:          # call on every resync payload and on late join
 	baseline_wave = RunData.current_wave
@@ -47,7 +38,8 @@ func save() -> void:
 		f.close()
 ```
 
-Thresholds that avoid false positives from legitimate desync (floats, pooling, late packets):
+Thresholds that avoid false positives from legitimate desync (floats, pooling, late packets). A false positive
+now costs a ranked run, so err on the side of silence:
 - Audit **reliable events and phase states** only. Never snapshots, never interpolated positions, never anything
   within 1 s of a scene change or resync.
 - Bounds get a tolerance (table below) **and** a repeat rule: minor findings count only from the second wave in a
@@ -55,6 +47,7 @@ Thresholds that avoid false positives from legitimate desync (floats, pooling, l
 - Exact checks (re-derived rolls, commit hashes, item ledger) are `HARD` on the first miss, because loss or timing
   cannot produce them.
 - Reset on resync. Skip the first wave after a join.
+- `subject` stays in the local file for debugging. The toast and the end screen show only the reason category.
 
 ## 2. Bounds table (client audits the host; "hook" = Brotato member, verify per patch)
 
@@ -73,8 +66,8 @@ Thresholds that avoid false positives from legitimate desync (floats, pooling, l
 | Player stats | host-sent stat set vs stats recomputed from the item ledger with the mod's own stat summation (if the mod implements it; else skip) | equal | exact for ints | MAJOR |
 
 Host audits of clients (only what clients own): position inside the arena and `distance ≤ max_speed × dt × 1.3`
-with `max_speed` from host-side stats including dashes (clamp, don't flag); intents per slot ≤ 30/s; unknown
-message types → log the sender.
+with `max_speed` from host-side stats including dashes (clamp, don't flag; sustained violation over 3 s →
+`MAJOR`); intents per slot ≤ 30/s (drop); unknown message types → log the sender.
 
 ## 3. Re-derivation at wave end (time-sliced)
 
@@ -137,70 +130,64 @@ func broadcast_wave_hash() -> void:
 	net.broadcast_reliable(MSG_WAVE_HASH, {"wave": RunData.current_wave, "hash": h})   # to ALL peers
 ```
 
-- Send when leaving the shop (state is final, no gameplay running). Collect for up to 5 s, then resolve with
-  `resolve_quorum()` (SKILL.md §5) over **connected** peers only.
-- `status == "outliers"`: each outlier gets a `MAJOR` finding on every peer; if the outlier is the host, open a vote.
-- `status == "undecided"` (2 players or a tie): show both players a diff of `wave_hash_parts()` (exchange the parts,
-  ≤ 1 KB) and mark the run unverified. Nobody is accused.
-- Disagreement is usually a **desync bug**, not a cheat. The sibling's resync (host → that slot) still runs; the
-  audit only records.
-
-## 5. Votes (host mismatch, kick)
-
-| Vote | Who votes | Needs | Timeout default |
-|---|---|---|---|
-| Host is the outlier | all clients | majority of connected clients | continue, run unverified |
-| Kick peer X | all connected peers except X | majority, and host must agree if host is a voter | no kick |
-| End run | everyone | majority | continue |
-
-Message: `VOTE_OPEN{vote_id, kind, target, deadline_ms}` from the initiator to all; `VOTE_CAST{vote_id, yes}` to all
-(not only to the host, so everyone can count); each peer counts locally; the host executes kicks. A vote the host
-refuses to execute is itself a finding (`MAJOR`), shown to all clients.
-
-Kick execution (BrotatoOnline pattern, proven in a shipped mod): send `KICKED` reliable to the target, remove it from
-the slot table, stop accepting its sessions and packets, wait 1 s so the reliable message flushes, then
-`closeSessionWithUser`/`closeP2PSessionWithUser`, and set lobby data `banned = "<id>,<id>"`. Every peer reads
-`banned` on `lobby_data_update` and ignores those IDs. If the lobby owner later becomes a banned ID, peers leave.
-
-## 6. Local ban list
+- Send when leaving the shop (state is final, no gameplay running). Collect for up to 5 s over **connected**
+  peers; a peer whose hash never arrives counts as a disconnect (`invalid: disconnect`), not as a mismatch.
+- Decision: `seen.size() > 1` → `run_state.invalidate("state_mismatch")` (SKILL.md §5). That is all.
+- Diagnostic only (local file): the majority/minority split below. With 2 peers there is no majority; with 3+
+  a lone outlier is usually the desynced one, but it is still not shown in the UI.
 
 ```gdscript
-const BAN_PATH := "user://%s/banlist.json"
-var bans := {}        # "7656119..." -> {"when": unix, "why": "...", "run": "<run_hash>"}
-
-func is_banned(steam_id: int) -> bool:
-	return bans.has(str(steam_id))            # strings: JSON would turn the int into a float
-
-func on_lobby_members_changed(member_ids: Array) -> void:
-	for id in member_ids:
-		if is_banned(id):
-			if net.is_host():
-				net.kick(id)                  # host: don't let them play
-			else:
-				net.leave_lobby("banned peer present")
+func diag_quorum(hashes: Dictionary) -> Dictionary:    # steam_id -> PoolByteArray; written to the audit file
+	var groups := {}
+	for id in hashes:
+		var key: String = hashes[id].hex_encode()
+		groups[key] = groups.get(key, 0) + 1
+	var best := ""
+	for key in groups:
+		if best == "" or groups[key] > groups[best]:
+			best = key
+	var minority := []
+	for id in hashes:
+		if hashes[id].hex_encode() != best:
+			minority.append(id)
+	return {"n": hashes.size(), "groups": groups.size(), "majority_size": groups.get(best, 0), "minority": minority}
 ```
 
-Ban only after a vote or an explicit user action in the player list (BrotatoOnline has a kick dialog there; add
-"kick and ban"). A single mismatch never bans. Show the ban reason and allow unbanning in the mod settings.
+- Disagreement is usually a **desync bug**, not a cheat. The sibling's resync (host → that slot) still runs so
+  the game stays playable; the run stays invalid for the rest of the run.
 
-## 7. Run integrity (verified-run log)
+## 5. Run state (the single response)
 
-The log is small: per wave `{wave, hash, outliers, audit_score_delta, purchases: [...], levelups: [...], deaths: [...]}`
-plus the seed round (`round`, `commits`, `reveals`), the member list and the mod/game versions.
+`run_state` (SKILL.md §7) is sticky and additive. Reasons: `seed` (round failed twice / reveal mismatch),
+`state_mismatch` (any wave-hash difference), `auth` (any auth-ticket result other than OK, at join or later),
+`audit` (score ≥ 10), `disconnect` (a peer left mid-wave, or its hash never arrived), `version` (mod/game/DLC
+mismatch found after lobby lock). On the first reason: neutral toast, badge, `MSG_RUN_INVALID` to all peers, and
+`invalid` + `reasons` ride along in every phase message and the resync payload so late joiners and peers that
+missed the message agree. The invalid flag never clears during a run.
+
+UI text rules: "Run not verified: state mismatch" / "Run not verified: seed" / "Run not verified: auth". No Steam
+ID, no slot, no colour on a player. Players keep playing; nothing is disabled except the ranked upload.
+
+## 6. Run integrity (peer-verified run log)
+
+The log is small: per wave `{wave, hash, audit_score_delta, purchases: [...], levelups: [...], deaths: [...]}`
+plus the seed round (`round`, `commits`, `reveals`), the member list, the mod/game versions and `reasons`.
 
 ```gdscript
 func finish_run(won: bool) -> void:
 	var log_bytes := canon([ "brotato-run-v1", run_seed, members, won, waves_summary ])   # ints/strings only
 	var run_hash := SeedRound.sha256(log_bytes)
-	var sig := crypto.sign(HashingContext.HASH_SHA256, run_hash, my_key)                 # null-safe: skip if no Crypto
+	var sig := PoolByteArray()
+	if crypto != null:
+		sig = crypto.sign(HashingContext.HASH_SHA256, run_hash, my_key)
 	net.broadcast_reliable(MSG_RUN_SIGN, {"hash": run_hash, "sig": sig})
 	# collect for 10 s; then
-	var verified := _all_connected_slots_signed_same_hash(run_hash) and not audit.run_unverified \
-		and seed_round.done and _no_mid_run_disconnects
-	_save_run_file(run_hash, verified)      # user://<mod>/runs/<hex>.json: log, hashes, pubkeys, signatures
+	var verified := not run_state.invalid and seed_round.done \
+		and _all_slots_that_played_signed_same_hash(run_hash)
+	_save_run_file(run_hash, verified, run_state.reasons)   # user://<mod>/runs/<hex>.json: log, hashes, pubkeys, sigs
 ```
 
-Badge rules: "peer-verified" only if every slot that played signed the same `run_hash`, the seed round completed
-with all commits verified, no peer crossed `UNVERIFIED_AT`, no quorum result was "outliers" or "undecided", and no
-one disconnected mid-wave. Anything else is "unverified" with the reason listed. A reader of the file re-checks
-signatures against the embedded public keys and the Steam IDs; it cannot prove the peers did not collude.
+Badge rules: "peer-verified" only if `run_state.invalid` is false at the end, the seed round completed with all
+commits verified, and every slot that played signed the same `run_hash`. Anything else is "not verified" with the
+reasons listed. A reader of the file re-checks signatures against the embedded public keys and the Steam IDs; it
+cannot prove the peers did not collude. Ranked boards additionally need [ranked-backend.md](ranked-backend.md).
