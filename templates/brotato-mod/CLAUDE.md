@@ -50,7 +50,7 @@ Select-String -Path "$env:APPDATA\Brotato\logs\godot.log" -Pattern "SCRIPT ERROR
 
 ## Skills
 
-`brotato-modding` (Mod Loader API, Manifest, Interna, Fehler → Lösung), `godot3-gdscript-pitfalls` (immer vor GDScript), `brotato-online-multiplayer` (Steam-Lobbys, Host-Autorität, Desync), `brotato-stability-performance` (Pooling, Crashes, Release-Checkliste), `brotato-dev-workflow` (Dev-Loops, Mod-Loader-Flags, Headless-Tests, Lint, Packen, Upload); dazu `systematic-debugging` und `verification-before-completion`.
+`brotato-modding` (Mod Loader API, Manifest, Interna, Fehler → Lösung), `godot3-gdscript-pitfalls` (immer vor GDScript), `brotato-online-multiplayer` (Steam-Lobbys, Host-Autorität, Desync), `brotato-stability-performance` (Pooling, Crashes, Release-Checkliste), `brotato-ui-qol` (Menüs, Einstellungen, Tasten, Übersetzungen), `brotato-dev-workflow` (Dev-Loops, Mod-Loader-Flags, Headless-Tests, Lint, Packen, Upload); dazu `systematic-debugging` und `verification-before-completion`.
 
 ## Vor „fertig“
 
