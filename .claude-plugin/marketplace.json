@@ -1,6 +1,6 @@
 {
   "name": "gamedev-skills",
-  "description": "Skills for Unreal Engine 5, billiards game development, FiveM, FiveM for GTA V Enhanced, Brotato modding, engine-neutral game development and web development: pitfalls, error fixes and correct patterns, plus curated MIT/Apache-licensed community skills.",
+  "description": "Skills for Unreal Engine 5, billiards game development, FiveM, FiveM for GTA V Enhanced, Blender modeling for GTA MLOs and clothing, Brotato modding, engine-neutral game development and web development.",
   "owner": {
     "name": "officialveron9-dotcom"
   },
@@ -19,6 +19,11 @@
       "name": "brotato",
       "source": "./plugins/brotato",
       "description": "Brotato modding: Godot Mod Loader, script extensions, game internals, GDScript version pitfalls, online multiplayer."
+    },
+    {
+      "name": "blender-modeling",
+      "source": "./plugins/blender-modeling",
+      "description": "Blender modeling: GTA V/FiveM MLO interiors with Sollumz, functional doors/garages/windows, GTA texture editing, photoreal clothing, bpy pitfalls, plus vendored MIT Blender skills (current API, export, hard-surface, retopology, UV/baking, rigging)."
     },
     {
       "name": "unreal-engine-reference",

@@ -1,13 +1,13 @@
 # Working in this repo
 
 This repo is a Claude Code plugin marketplace (`gamedev-skills`) of skills for Unreal Engine 5,
-FiveM, FiveM for GTAV Enhanced, Brotato mods (Godot 3) and web development. The owner writes in German; reply in German. Skill content is English.
+FiveM, FiveM for GTAV Enhanced, Blender modeling (GTA MLOs, textures, clothing), Brotato mods (Godot 3) and web development. The owner writes in German; reply in German. Skill content is English.
 
 ## Layout
 
 - `plugins/<plugin>/skills/<skill>/SKILL.md` plus `references/*.md`. Plugins are listed in
   `.claude-plugin/marketplace.json`; each has `.claude-plugin/plugin.json`.
-- `unreal-engine-reference`, `general-dev`, `gamedev-general` and `web-dev` are copied from upstream (see their `UPSTREAM.md`).
+- `unreal-engine-reference`, `general-dev`, `gamedev-general`, `web-dev` and the skills listed in `plugins/blender-modeling/UPSTREAM.md` are copied from upstream (see each `UPSTREAM.md`).
   Don't edit them by hand except to re-sync with upstream; keep each skill's `LICENSE`.
 
 ## Rules for skills

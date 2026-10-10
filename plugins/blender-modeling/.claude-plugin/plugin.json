@@ -1,0 +1,5 @@
+{
+  "name": "blender-modeling",
+  "description": "Blender 5.x modeling and bpy automation for GTA V/FiveM MLO interiors, game textures and Unreal Engine 5.8 clothing: bpy version pitfalls and error fixes, verification through the Blender MCP or headless runs, FBX/glTF export, hard-surface modeling, retopology, UV/baking and rigging, vendored from luckyfried/code-tools and scenario-labs/skills (MIT).",
+  "author": { "name": "officialveron9-dotcom" }
+}

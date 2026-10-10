@@ -14,10 +14,11 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 
 | Plugin | Skills | Herkunft |
 |---|---|---|
-| `unreal-engine` | 12 | eigene Recherche |
+| `unreal-engine` | 11 | eigene Recherche |
 | `unreal-engine-reference` | 31 | [quodsoler/unreal-engine-skills](https://github.com/quodsoler/unreal-engine-skills), MIT |
 | `fivem` | 6 | eigene Recherche |
 | `brotato` | 7 | eigene Recherche |
+| `blender-modeling` | 10 (wird auf 13 erweitert) | eigene Recherche + [luckyfried/code-tools](https://github.com/luckyfried/code-tools), [scenario-labs/skills](https://github.com/scenario-labs/skills) (MIT) |
 | `general-dev` | 2 | [obra/superpowers](https://github.com/obra/superpowers), MIT |
 | `gamedev-general` | 12 | [awesome-gamedev-agent-skills](https://github.com/gamedev-skills/awesome-gamedev-agent-skills) (Apache-2.0), [mattpocock/skills](https://github.com/mattpocock/skills) (MIT), [fvadicamo/dev-agent-skills](https://github.com/fvadicamo/dev-agent-skills) (MIT) |
 | `web-dev` | 12 | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills), [pproenca/dot-skills](https://github.com/pproenca/dot-skills), [addyosmani](https://github.com/addyosmani/web-quality-skills), [anthropics/skills](https://github.com/anthropics/skills), [testdino-hq](https://github.com/testdino-hq/playwright-skill), [supabase/agent-skills](https://github.com/supabase/agent-skills), [mcollina/skills](https://github.com/mcollina/skills) u. a. (MIT/Apache-2.0) |
@@ -35,7 +36,6 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 | `ue5-performance-optimization` | Profiling, CPU/GPU-Engpässe, Nanite, Scalability, Shader-Ruckler, Speicher sparen |
 | `ue5-animation-characters` | Animation Blueprints, Motion Matching, Control Rig/IK, Retargeting, MetaHuman |
 | `ue5-character-creation-clothing` | Charaktere aus MetaHuman, Fab, CC4, Daz, Mixamo; Kleidung anziehen ohne Durchstechen; Stoffsimulation |
-| `clothing-creation-pipeline` | Fotorealistische Kleidung erstellen und an den Körper anpassen: Marvelous Designer/CLO, Blender, Substance-Stoffe, Weight-Transfer, Export nach UE, Blender-Automatisierung |
 | `ue5-npc-ai` | StateTree/Behavior Tree, NavMesh, Wahrnehmung, Smart Objects, Zuschauer-NPCs, KI-Gegner |
 | `billiards-game-dev` | Kugelphysik (eigene Simulation statt Chaos), Effet, Banden, Zielhilfe, Multiplayer-Sync |
 
@@ -49,6 +49,17 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 | `fivem-performance-debugging` | resmon, Profiler, teure Loops, Konsolenfehler mit Lösung |
 | `fivem-server-setup` | server.cfg, Game Build, txAdmin, Artifacts, Datenbank, Streaming von Autos/MLOs/Kleidung |
 | `fivem-gta5-enhanced` | Was auf FiveM für GTAV Enhanced anders ist: `cfx-server`, Breaking Changes, `stream_enhanced`, Alchemist |
+
+### `blender-modeling` (alles fürs Modellieren in Blender)
+
+| Skill | Wofür |
+|---|---|
+| `clothing-creation-pipeline` | Fotorealistische Kleidung erstellen und an den Körper anpassen: Marvelous Designer/CLO, Blender, Substance-Stoffe, Weight-Transfer, Export nach UE |
+| `blender-python-pitfalls` | bpy-Änderungen von Blender 2.8 bis 5.x, exakte Fehlermeldungen → Ursache → Lösung; damit Claudes Blender-Scripts laufen |
+| `blender-current-api`, `blender-game-export`, `blender-verify` | Aktuelle API, Export für Game-Engines, Ergebnisse prüfen (übernommen, MIT) |
+| `scenario-blender-expert`, `-hard-surface`, `-retopology`, `-uv-baking`, `-rigging` | Modellieren, Retopologie, UV und Baking, Rigging mit Python-Scripts, getestet auf Blender 5.2 (übernommen, MIT) |
+
+Blender-MCP, Sollumz und hilfreiche Addons: [plugins/blender-modeling/EXTERNAL.md](plugins/blender-modeling/EXTERNAL.md).
 
 ### `brotato` (eigene Skills)
 
@@ -105,6 +116,7 @@ Nur für Web-Projekte installieren. Gerankte Gesamtliste mit weiteren Empfehlung
 | FiveM-Server (Legacy oder Enhanced) | `fivem`, `general-dev` |
 | Brotato-Mod | `brotato`, `general-dev`, `gamedev-general` |
 | Website / Web-App | `web-dev`, `general-dev` |
+| Blender (GTA-MLOs, Kleidung, Modelle) | `blender-modeling`, `general-dev` |
 
 ### A) Claude Code im Web (claude.ai/code)
 
@@ -141,6 +153,7 @@ angemeldet sein (z. B. `gh auth login` und danach `gh auth setup-git`).
 /plugin install unreal-engine@gamedev-skills
 /plugin install unreal-engine-reference@gamedev-skills
 /plugin install fivem@gamedev-skills
+/plugin install blender-modeling@gamedev-skills
 /plugin install brotato@gamedev-skills
 /plugin install general-dev@gamedev-skills
 /plugin install gamedev-general@gamedev-skills
