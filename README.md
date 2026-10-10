@@ -18,7 +18,7 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 | `unreal-engine-reference` | 31 | [quodsoler/unreal-engine-skills](https://github.com/quodsoler/unreal-engine-skills), MIT |
 | `fivem` | 6 | eigene Recherche |
 | `brotato` | 7 | eigene Recherche |
-| `blender-modeling` | 10 (wird auf 13 erweitert) | eigene Recherche + [luckyfried/code-tools](https://github.com/luckyfried/code-tools), [scenario-labs/skills](https://github.com/scenario-labs/skills) (MIT) |
+| `blender-modeling` | 11 (wird auf 13 erweitert) | eigene Recherche + [luckyfried/code-tools](https://github.com/luckyfried/code-tools), [scenario-labs/skills](https://github.com/scenario-labs/skills) (MIT) |
 | `general-dev` | 2 | [obra/superpowers](https://github.com/obra/superpowers), MIT |
 | `gamedev-general` | 12 | [awesome-gamedev-agent-skills](https://github.com/gamedev-skills/awesome-gamedev-agent-skills) (Apache-2.0), [mattpocock/skills](https://github.com/mattpocock/skills) (MIT), [fvadicamo/dev-agent-skills](https://github.com/fvadicamo/dev-agent-skills) (MIT) |
 | `web-dev` | 12 | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills), [pproenca/dot-skills](https://github.com/pproenca/dot-skills), [addyosmani](https://github.com/addyosmani/web-quality-skills), [anthropics/skills](https://github.com/anthropics/skills), [testdino-hq](https://github.com/testdino-hq/playwright-skill), [supabase/agent-skills](https://github.com/supabase/agent-skills), [mcollina/skills](https://github.com/mcollina/skills) u. a. (MIT/Apache-2.0) |
@@ -54,6 +54,7 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 
 | Skill | Wofür |
 |---|---|
+| `fivem-mlo-doors-windows` | Echte Türen, Garagentore (Keypad, PIN, Fernbedienung) und Glasfenster mit Durchsicht für MLOs; Portale, Glas-Shader, Türsystem-Lua, ox_doorlock |
 | `clothing-creation-pipeline` | Fotorealistische Kleidung erstellen und an den Körper anpassen: Marvelous Designer/CLO, Blender, Substance-Stoffe, Weight-Transfer, Export nach UE |
 | `blender-python-pitfalls` | bpy-Änderungen von Blender 2.8 bis 5.x, exakte Fehlermeldungen → Ursache → Lösung; damit Claudes Blender-Scripts laufen |
 | `blender-current-api`, `blender-game-export`, `blender-verify` | Aktuelle API, Export für Game-Engines, Ergebnisse prüfen (übernommen, MIT) |
