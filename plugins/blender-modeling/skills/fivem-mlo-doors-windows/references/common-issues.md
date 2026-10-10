@@ -9,9 +9,11 @@ confirmed in a primary source. Versions are given where they matter. Add new sol
 |---|---|---|
 | Door does not move at all, not even when pushed | Leaf is part of the shell drawable, archetype flag Static (32), or no door special attribute | Separate `.ydr` + archetype with Special Attribute 7 + Dynamic + Enable Door Physics ([doors.md](doors.md)) |
 | Door falls over, rolls away or flies off when touched | Dynamic without Enable Door Physics or without a special attribute: a loose physics prop | Set both. Sollumz wiki: Enable Door Physics does nothing without a special attribute |
-| Door rotates around its middle or the wrong edge | Origin not at the hinge | Origin to the hinge (Cfx Part 8 steps), re-export, re-read coords in game |
+| Door rotates around its centre or the wrong edge | Origin not on the hinge axis | `make_door` pivot (hinge axis, mid-height), or set the origin manually; re-export; re-read coords in game |
 | Door swings up/sideways, or on the wrong axis | Mesh not aligned to the template's local axes | Align to the vanilla template before Convert to Drawable; apply transforms |
-| Door swings into the wall / 180° | No limit on the swing | MLO entity Door extension: `enableLimitAngle` + `limitAngle` (radians; vanilla 1.117) |
+| Door swings into the wall / 180° | No limit on the swing; or the hinge axis sits on the jamb plane, so the leaf enters the wall | Door extension `enableLimitAngle` + `limitAngle` (radians; vanilla 1.117); inset the axis by `gap + t/2` with a hinge barrel (generator, swing tested ±90°) |
+| Open door is blocked or stops at about 60-80° | Leaf bound extends past the hinge axis (its corner sweeps into the frame), or the frame/shell collision is inside the swing arc | Bound from the free edge **to the axis**; no shell collision in the reveal; check with the generator's swing test |
+| Visible gaps or rubbing between door and frame | Leaf sized to the opening without clearances, or the wall hole does not match the frame | Leaf = opening − 2×3 mm − t/2; 3 mm head, 10 mm floor; cut the hole with `wall_opening` |
 | Door jitters, sticks or launches on spawn | Leaf bound intersects the frame/floor collision in the closed pose | Leave a gap of mm to 1-2 cm; shrink the leaf box bound (verify per model) |
 | Door invisible from one side | Single-sided mesh or flipped normals | Closed mesh with outward normals, or the Double-sided rendering flag (65536) |
 | Door visible but no collision | No embedded bound in the `.ydr`, or collision edited without a new Bound Composite | Keep or rebuild the Bound Composite (Cfx docs step 8) |
@@ -50,7 +52,7 @@ confirmed in a primary source. Versions are given where they matter. Add new sol
 | Opens for any car that drives up | Unlocked automatic door with distance > 0 (qb `garage` type uses 30.0) | Autolock, or the toggle pattern |
 | Visually open, but the car hits an invisible wall | Shell collision across the opening, or a static duplicate | Cut the collision; remove the duplicate |
 | Panel sticks halfway / jitters at the top | Door bound hits lintel/ceiling collision while moving | Clear the space the panel moves into |
-| Moves on the wrong axis | Wrong special attribute or origin | 5 = vertical, bottom center; 8 = sliding, bottom corner |
+| Moves on the wrong axis | Wrong special attribute or origin; slab built with width on Y | 5 = vertical, bottom center; 8 = sliding, bottom corner; width on X, thickness on Y (`make_garage_door`/`make_sliding_door`); compare with the template bbox |
 | Speed differs between Legacy and Enhanced | Enhanced 2026-08-04: door speed frame-rate independent; Legacy depends on FPS | Tune `doorRate`/rate on both |
 | Barrier/gate ignores the automatic distance | Rate below 1.5, or the distance is lost on first set (cfx-anes-gates notes) | Rate ≥ 1.5; refresh distance and rate |
 | Driver can't toggle from the car | `maxDistance` too small; E key in vehicles (verify) | `maxDistance` 5-15, or a remote key mapping |
@@ -63,6 +65,7 @@ confirmed in a primary source. Versions are given where they matter. Add new sol
 | Glass invisible | Alpha 0 everywhere; single face seen from the back; entity lodDist too small; glass outside the portal area | Alpha 20-90; two faces or Double-sided; raise lodDist; enlarge the portal |
 | Glass black or very dark | No vertex colours, or the room is too dark through the portal | Paint vertex colours; check room timecycle and lights |
 | Glass flickers | Two coplanar faces (z-fight), or glass coplanar with the portal or shell | Offset faces by a few mm; glass about 7 cm from the portal plane (vanilla) |
+| Glass z-fights with the window frame | Glass plane on a frame face plane, or the glass edge flush with a frame face | Glass faces 6 mm apart, centred inside the frame depth, edges 1 cm **into** the frame (`make_window`, tested: no coplanar planes) |
 | Glass sorts wrongly (objects behind it vanish or pop in front) | Glass inside the shell drawable; glass behind glass | Separate glass entity; Draw Last (4); Disable alpha sorting (64) |
 | Can't see outside from inside (sky or black behind the glass) | No `room -> limbo` portal over the window; room flag Dont Render Exterior (256) | Add the portal; clear flag 256 |
 | Exterior disappears when looking through a window from a back room | Exterior only through chained portals; depth limited | Keep `exteriorVisibiltyDepth = -1`; add portals between rooms (verify) |
@@ -74,6 +77,17 @@ confirmed in a primary source. Versions are given where they matter. Add new sol
 | Peds/bullets pass through the window | No glass collision in the opening | Thin box bound with `GLASS_BULLETPROOF` (or `GLASS_SHOOT_THROUGH` if intended) |
 | Breakable glass does not export or break | Mesh not 2 parallel planes × 2 triangles, no collision on the bone, Breakable Glass off, archetype not Dynamic, or the Sollumz build lacks the feature | Follow the Sollumz export warnings ([windows-glass-portals.md](windows-glass-portals.md)) |
 | Crash or pool error with many window portals | Interior/portal pools full (verify which) | `increase_pool_size` PortalInst/OcclusionPortalInfo/Entity within Cfx limits; merge window portals |
+
+## Modelling / generator (bpy, Sollumz)
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Drawable empty ends up at the world origin, not at the model's place | `obj.matrix_world` read right after setting `obj.location` is stale until `view_layer.update()` (bpy 4.2/5.2, found while testing) | Read `matrix_basis` for unparented objects, or call `bpy.context.view_layer.update()` first |
+| Exported left leaf points the wrong way / double door overlaps | "Apply Parent Transforms" on: the Drawable's 180° rotation is baked into the vertices | Turn it off; Sollumz then exports relative to the Drawable |
+| `.ydr` exported as `vx_door_01.001` / archetype not found | Blender name suffix from a duplicate | Rename the Drawable to the archetype name before export |
+| `[skip] Sollumz not loaded` messages | Generator run without Sollumz (`blender -b` without the add-on, or the bpy wheel) | Expected: geometry is built; run `sz_convert` inside Blender with Sollumz enabled |
+| Placeholder materials `sz_<shader>.<label>` remain | Shader name not in `window_manager.sz_shader_materials` (upper-case names) | Use real shader file names (`glass`, `normal_spec`, ...) |
+| Door collides with nothing / everything after conversion | Bound flags left empty (generators do not set `composite_flags1/2`) | Copy the flags from the imported template's bound (verify which flags vanilla doors use) |
 
 ## Enhanced (Gen9)
 

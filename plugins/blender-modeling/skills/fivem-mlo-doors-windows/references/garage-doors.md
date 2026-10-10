@@ -1,11 +1,20 @@
 # Garage doors, sliding gates, barriers
 
 Read for vehicle doors in an MLO: vertical garage doors, sliding gates, barrier arms, and keypad or remote control.
-Modelling basics are in [doors.md](doors.md). The full Lua resource is in [door-scripting.md](door-scripting.md).
+Build them from scratch with `make_garage_door` (sectional/roller/flat, origin bottom centre) or `make_sliding_door`
+(origin bottom corner) in [procedural-modeling.md](procedural-modeling.md). The vanilla props below are reference
+only. Modelling basics are in [doors.md](doors.md), and the full Lua resource in [door-scripting.md](door-scripting.md).
+
+**Geometry rules for custom garage doors.** One **rigid** mesh: the door system moves a single object, so sections
+cannot articulate, and panels are grooves only. The origin follows the official guide. Width runs on X and thickness
+on Y. Mount the door on the interior face, overlapping the opening by about 5 cm. Keep the space it moves into free of
+collision. The exact motion of type 5 (straight lift or tilt-up) is engine-defined. It could not be read from vanilla
+archetypes here (they hold no motion data, and no game files were available), so test it in game and leave
+clearance for both.
 
 ## Types
 
-| Special Attribute | Motion | Template / vanilla example | Origin |
+| Special Attribute | Motion | Reference only (template / vanilla) | Origin |
 |---|---|---|---|
 | Garage Door (5) | panel moves up (up-and-over / roller look) | `lr_prop_supermod_door_01` (official template), `prop_com_gar_door_01` | bottom center |
 | Sliding Door (8) | slides sideways | `prop_facgate_07b` (official template), `prop_gate_prison_01`, `prop_autodoor` (double) | bottom corner |

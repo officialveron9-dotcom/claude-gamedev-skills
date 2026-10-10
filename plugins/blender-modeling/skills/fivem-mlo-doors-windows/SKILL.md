@@ -1,22 +1,27 @@
 ---
 name: fivem-mlo-doors-windows
-description: Builds working doors, garage doors and see-through glass windows for FiveM MLOs made with Blender + Sollumz (Legacy and Enhanced) - door archetypes (Normal/Garage/Sliding Door special attribute, Dynamic + Enable Door Physics, hinge origin, door extension), portal-attached door/glass entities, door system natives (AddDoorToSystem, DoorSystemSetDoorState/OpenRatio/AutomaticRate/HoldOpen), ox_doorlock/qb-doorlock, server-side state sync, glass shaders, room-to-limbo window portals. Use for MLO door, garage door, door system, ox_doorlock, glass shader, window portal, Sollumz door or fragment, or German "Tür", "Garagentor", "Fenster", "Glas", "Tür geht nicht auf", "durchs Fenster schauen", "Türschloss".
+description: Builds working doors, double/garage doors and see-through windows for FiveM MLOs from scratch in Blender + Sollumz (Legacy and Enhanced) - tested bpy generators (hinge pivot, frame, wall opening with reveal, glass, bounds, LODs), door archetypes (Normal/Garage/Sliding Door attribute, Dynamic + Enable Door Physics), portal-attached entities, door system natives (AddDoorToSystem, DoorSystemSetDoorState/OpenRatio/AutomaticRate), ox_doorlock, server-side state sync, glass shaders, room-to-limbo portals. Use for MLO door, garage door, ox_doorlock, glass shader, window portal, Sollumz door, or German "Tür", "Garagentor", "Fenster", "Glas", "Tür geht nicht auf", "durchs Fenster schauen", "Türschloss".
 ---
 
 # MLO doors, garage doors and windows (state 2026-10)
 
 Scope: functional doors and glass inside a custom MLO built with Blender + Sollumz (+ CodeWalker), on FiveM Legacy
-and FiveM for GTAV Enhanced. Related skills (link by name): `fivem-mlo-creation` covers the shell, rooms/portals in
-general, collision and export. `gta-texture-editing` covers painting out doors and windows that are baked into textures.
+and FiveM for GTAV Enhanced. **Default: Claude builds every door, double door, garage door and window from scratch**
+with the tested generators in [references/procedural-modeling.md](references/procedural-modeling.md). Vanilla props
+are **reference only**, for dimensions, flags, special attribute and behaviour. Only GTA's systems are reused: archetype
+attributes/flags, door physics, the door system/ox_doorlock, glass shaders and portals.
+Related skills (link by name): `fivem-mlo-creation` covers the shell, rooms/portals in general, collision and export. `gta-texture-editing` covers painting out doors and windows that are baked into textures.
 `fivem-security` covers server event validation, and `fivem-frameworks` covers job checks and ox_lib.
 
 ## Non-negotiables
 
-1. **A door that moves is its own archetype, never part of the shell.** Give it its own `.ydr` (embedded collision and
-   a one-bone skeleton copied from a vanilla template) and a ytyp archetype with a door **special attribute** plus the
-   flags **Dynamic** and **Enable Door Physics**. "Enable Door Physics" does nothing without the special attribute.
-2. **The origin is the pivot.** Swing door: hinge (side center). Sliding door/gate: bottom corner. Vertical garage
-   door: bottom center. Align the mesh to the vanilla template so the local axes match.
+1. **A door that moves is its own archetype, never part of the shell.** Give it its own `.ydr` (custom mesh,
+   embedded box bound; the official Cfx path keeps a vanilla template's armature/bone) and a ytyp archetype with a
+   door **special attribute** plus the flags **Dynamic** and **Enable Door Physics**. "Enable Door Physics" does
+   nothing without the special attribute.
+2. **The origin is the pivot.** Swing door: on the hinge axis at mid-height (vanilla door entities sit at half the
+   leaf height). Sliding door/gate: bottom corner. Vertical garage door: bottom center. The generators build the
+   leaf along local −X with Z up, like the vanilla 24/7 layout. Compare once with the template's bounding box (verify).
 3. **Cut the opening.** Remove the door/window opening from both the shell mesh and the shell collision. Put a
    **portal** (`room -> limbo` for outside openings) over it, and **attach the door/glass entity to that portal**, as
    vanilla does (verified in `v_int_66`, the 24/7 shop).
@@ -32,19 +37,20 @@ general, collision and export. `gta-texture-editing` covers painting out doors a
 
 ## 1. What to build
 
-| Need | Asset (official Cfx template) | ytyp Special Attribute | Origin | Driven by |
-|---|---|---|---|---|
-| Swinging door | `.ydr` (`v_ilev_bl_door_l`) | Normal Door (7) | hinge, side center | lock state 0/1 |
-| Double door | two entities (separate L/R models, or one model rotated 180°) | 7 each | each hinge | two door hashes, same state |
-| Sliding door / gate | `.ydr` (`prop_facgate_07b`) | Sliding Door (8) | bottom corner | automatic distance/rate, lock |
-| Vertical garage door | `.ydr` (`lr_prop_supermod_door_01`) | Garage Door (5) | bottom center | open ratio + lock, or automatic |
-| Vertical slider, barrier arm, rail barrier | `.ydr` | Sliding Vertical Door (10), Barrier Door (9), Rail Crossing (12) (verify) | copy a vanilla prop | as above |
-| Fixed window | glass `.ydr` entity on the portal | none (0) | any | nothing |
-| Breakable window | `.yft` fragment, bone "Breakable Glass" | none, archetype Dynamic | any | physics |
+| Need | Build (generator) | Reference only (Cfx template) | ytyp Special Attribute | Origin | Driven by |
+|---|---|---|---|---|---|
+| Swinging door | `make_door` | `v_ilev_bl_door_l` | Normal Door (7) | hinge axis, mid-height | lock state 0/1 |
+| Double door | `make_double_door` (`_l` Y-mirrored and rotated 180°, `_r`) | `v_ilev_247door`/`_r` | 7 each | each hinge | two door hashes, same state |
+| Sliding door / gate | `make_sliding_door` (origin bottom corner) | `prop_facgate_07b` | Sliding Door (8) | bottom corner | automatic distance/rate, lock |
+| Vertical garage door | `make_garage_door` (sectional/roller, one rigid mesh) | `lr_prop_supermod_door_01` | Garage Door (5) | bottom center | open ratio + lock, or automatic |
+| Barrier arm, vertical slider, rail barrier | custom | vanilla props | 9, 10, 12 (verify) | copy reference | as above |
+| Fixed window | `make_window` (frame + separate glass drawable) | - | none (0) | opening centre | nothing |
+| Breakable window | `.yft` fragment, bone "Breakable Glass" | - | none, archetype Dynamic | any | physics |
+| Wall hole + reveal | `make_wall_with_opening(*part["wall_opening"])` | - | shell | - | - |
 
-The fastest option is a vanilla door prop. In CodeWalker, open the RPF Explorer, search `door`/`gate`, open the
-prop's `.ytyp` and check the Special Attribute. Look-alikes that are not doors exist: `prop_sec_barier_02a` is not a
-door, `prop_sec_barrier_ld_02a` is. Details and a model list: [references/doors.md](references/doors.md).
+Vanilla props are references: in CodeWalker, read their size, `.ytyp` Special Attribute and flags, then build your own.
+Look-alikes exist (`prop_sec_barier_02a` is not a door, `prop_sec_barrier_ld_02a` is). Details:
+[references/doors.md](references/doors.md), [references/procedural-modeling.md](references/procedural-modeling.md).
 
 ## 2. Flag values (CodeWalker = Sollumz names)
 
@@ -62,21 +68,23 @@ portals), `64` Hide when door closed, `8192` Use Light Bleed (set on the vanilla
 Dont Render Exterior (must be off in rooms with windows), `8` No Exterior Lights, `4` No Directional Light.
 Full tables: [references/windows-glass-portals.md](references/windows-glass-portals.md).
 
-## 3. Door into the MLO (Sollumz)
+## 3. Custom door into the MLO (generator + Sollumz)
 
-1. Import the vanilla template `.ydr`. Snap the cursor to your door mesh and set the origin to the hinge
-   (`Object > Set Origin > Origin to 3D Cursor`). Align it to the template and apply transforms.
-2. Convert to Drawable. Delete the template mesh, then parent your mesh to the template armature/drawable and add a
-   **Copy Transforms** constraint (target: armature, bone: the template door bone). If you changed the collision,
-   make a new Bound Composite and parent the collision to it, or the in-game collision breaks.
-3. ytyp: Base archetype, Asset Type Drawable, name = file name, Special Attribute 7, flags Dynamic + Enable Door Physics.
+1. Generate it: `d = make_door("vx_shop_door_01", open_w=0.95, open_h=2.1)` (or `make_double_door`,
+   `make_garage_door`, `make_window`). The pivot sits on the hinge axis at mid-height and the leaf points along local
+   −X. A hinge barrel and the bound ending at the axis give 3 mm gaps and a full ±90° swing without touching the jamb.
+2. Cut the shell to `d["wall_opening"]` (`make_wall_with_opening` or your shell), so the frame lines the reveal.
+3. Move the **Drawable empty** into place. With Sollumz loaded, run `sz_convert(d)` (types, LODs, shaders, collision
+   material) and `sz_add_archetype(d["drawable"], "IS_NORMAL_DOOR")` (Special Attribute 7, Dynamic, Enable Door
+   Physics). Copy the bound flags from the template. Official skeleton path: `attach_to_template_bone`
+   (template mesh deleted).
 4. MLO archetype: add the door as an **entity**, set **Attached Portal** to the doorway portal, and add a **Door
    extension** (`enableLimitAngle`, `limitAngle` in radians; vanilla uses 1.117 = 64°).
-5. Export `.ydr`/`.ytd` (Gen8 to `stream/`, Gen9 to `stream_enhanced/`). Put the same `.ytyp`/`.ymap` in **both**
-   folders, because Enhanced ignores `stream/` once `stream_enhanced/` exists. Leave a few mm between the leaf and
-   the frame collision.
+5. Export with **Apply Parent Transforms OFF**, or rotated leaves get their rotation baked. Put `.ydr`/`.ytd` in
+   `stream/` (Gen8) and `stream_enhanced/` (Gen9), and the same `.ytyp`/`.ymap` in **both** (Enhanced ignores `stream/`
+   once `stream_enhanced/` exists).
 
-More (frames, double doors, separate ymap, wrong vs right): [references/doors.md](references/doors.md).
+Manual (non-scripted) steps, frames, double doors, wrong vs right: [references/doors.md](references/doors.md).
 
 ## 4. Door system natives (client; verified in citizenfx/natives)
 
@@ -173,7 +181,10 @@ Details: [references/windows-glass-portals.md](references/windows-glass-portals.
 |---|---|---|
 | Door won't open / is frozen | Door is part of the shell, archetype is Static, or there is no special attribute | Separate entity, attribute 7, Dynamic + Enable Door Physics |
 | Door falls over / flies away | Dynamic without a door attribute or Enable Door Physics | Set both; check the bound mass/material |
-| Door spins around its middle | Origin not at the hinge | Origin to hinge; re-export; re-read coords |
+| Door spins around its middle | Origin not at the hinge | Generator pivot (hinge axis, mid-height); re-export; re-read coords |
+| Door swings into the wall / stops when open | Hinge axis on the jamb plane, or the bound extends past the axis | Inset the axis by `gap + t/2`, hinge barrel, bound ends at the axis (`make_door`) |
+| Visible gaps or rubbing between door and frame | Leaf sized to the opening without gaps, or opening ≠ frame | `wall_opening` from the generator; 3 mm gaps, 10 mm floor |
+| Glass flickers at the frame | Glass face coplanar with frame or wall faces | Glass 6 mm double face, 1 cm into the frame, never on a frame plane |
 | Lock script does nothing | Coords are Blender-local or off by more than 0.5-1 m, or wrong model hash | `/doorlock` target or `GetEntityCoords` in game |
 | Locked for one player only | State set locally with no broadcast; late joiners get no state | GlobalState / ox_doorlock; apply on join |
 | Garage door snaps back / pumps | Unlocked + open ratio, or automatic distance lost | Lock at the ratio, or hold open; re-apply the distance |
@@ -186,25 +197,32 @@ All rows with versions: [references/common-issues.md](references/common-issues.m
 ## 10. Checklists
 
 **Per door**
-- [ ] Own `.ydr` from the template, origin at the pivot, axes aligned, embedded collision, skeleton bone kept.
+- [ ] Built with `make_door`/`make_double_door` (vanilla only as reference). Pivot on the hinge axis at mid-height,
+      leaf along −X, 3 mm gaps, bound ending at the axis, names `<prefix>_<mlo>_door_<nn>` without `.001`.
+- [ ] Sollumz: Drawable > model + composite > box bound, collision material, LOD, shader slots converted; template
+      armature + Copy Transforms (official path); Apply Parent Transforms OFF.
 - [ ] ytyp: Special Attribute (7/8/5), Dynamic, Enable Door Physics, not Static, name = file name.
 - [ ] Opening cut in shell mesh and collision. Portal over the doorway. Door entity attached to that portal.
 - [ ] Door extension with a limit angle if needed. Double doors use two entities and two hashes.
 - [ ] World coords and model hash checked in game. Server holds the state; every client applies it, including late joiners.
 
 **Per garage door**
-- [ ] Attribute 5 (vertical) or 8 (sliding), origin bottom center/corner, vehicle-sized portal and opening.
+- [ ] `make_garage_door` (one rigid mesh, grooves only) or `make_sliding_door`; attribute 5 or 8; origin bottom
+      center/corner; mounted on the interior face; clear space where the panel moves; vehicle-sized portal and opening.
 - [ ] Shell collision removed from the opening. Rate and distance tuned on both platforms.
 - [ ] Open/close via server event (job, distance, PIN or item checked server-side), synced to all clients.
 
 **Per window**
-- [ ] Hole in shell and collision, separate glass entity, both faces or Double-sided, glass shader, alpha texture, vertex colours.
+- [ ] `make_window` + `make_wall_with_opening(*win["wall_opening"])`: hole with reveal, frame/mullions static, separate
+      glass drawable (2 faces, not coplanar), `sz_glass.*` slot → glass shader, alpha texture, vertex colours.
 - [ ] `room -> limbo` portal over the glass, arrow outward, glass attached to it, not One-Way, room flag 256 off.
 - [ ] Glass collision material `GLASS_*`. If it must break: a `.yft` with a Breakable Glass bone.
 - [ ] Checked from inside and outside, by day and at night.
 
 ## References
 
+- [references/procedural-modeling.md](references/procedural-modeling.md): read **first** when building any door,
+  garage door, window or wall opening. It has the tested bpy generators, conventions, Sollumz API and test harness.
 - [references/doors.md](references/doors.md): read when building or placing a swinging/double/sliding door.
 - [references/garage-doors.md](references/garage-doors.md): read for garage, roller, sliding gate or barrier doors.
 - [references/windows-glass-portals.md](references/windows-glass-portals.md): read for glass, shaders, portals, lights.

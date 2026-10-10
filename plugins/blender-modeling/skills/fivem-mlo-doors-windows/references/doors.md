@@ -27,12 +27,37 @@ Read when building or placing a swinging, double or sliding door in an MLO. Gara
 | Door extension | `CExtensionDefDoor`: `enableLimitAngle true`, `startsLocked false`, `canBreak false`, `limitAngle 1.117011` (radians, 64°), `doorTargetRatio 0`, `audioHash` per door |
 | Door leaf vs portal | portal plane at y = -5.578, door entities at y = -5.490 (about 9 cm inside) |
 
-## Option A: reuse a vanilla door (fastest)
+## Default: custom door built from scratch
 
-1. Find a model. In CodeWalker, use RPF Explorer > search `door`, `gate`, `gar_door`, `shutter`. Open the `.ytyp` that
-   holds the archetype and check `specialAttribute` and `flags`. Alternatively click a door in the world view and read
-   the archetype panel. Common families: `v_ilev_*` (interior doors), `prop_*door*`, `prop_*gate*`, `hei_*`, `apa_*`.
-2. Models that public doorlock configs drive with the door system (so they are known door archetypes):
+Claude builds every leaf, frame and wall opening. The scripted path is
+[procedural-modeling.md](procedural-modeling.md) (`make_door`, `make_double_door`, `make_sliding_door`, tested on
+bpy 4.2 and 5.2). Manual steps in Blender, if you are not scripting:
+
+1. Model the leaf as a **closed** mesh (front, back, edges) with normals pointing out. A single plane disappears from
+   one side. Leaf = clear opening − 2 × 3 mm − t/2 (hinge inset), height = opening − 3 mm − 10 mm floor gap.
+2. Pivot: put the origin **on the hinge axis**, inset `gap + t/2` from the jamb, at **mid-height** of the leaf. Add a
+   half-round hinge barrel (radius t/2) so the closed gap stays 3 mm and the leaf can swing ±90° without entering the
+   jamb. Leaf along local −X, thickness on Y, Z up.
+3. Paint vertex colours (`Color 1`, face corner, byte color): green for interior, red for exterior (Cfx docs Part 3).
+   Unpainted props look dark or black in MLOs (Sollumz FAQ). UV map name: `UVMap 0`.
+4. Convert to Drawable. Collision: a **box bound** inside a Bound Composite, running from the free edge **to the hinge
+   axis** (not past it, or its corners hit the frame when swinging). Material `WOOD_*`/`METAL_*`/`GLASS_*`.
+5. Skeleton (official Cfx path): import the template (`v_ilev_bl_door_l.ydr` swing, `prop_facgate_07b.ydr` sliding,
+   `lr_prop_supermod_door_01.ydr` garage), delete its **mesh**, parent your mesh to its armature with a **Copy
+   Transforms** constraint (Target = armature, Bone = the template's door bone), and copy its bound composite flags. If
+   you changed the collision, use a **new Bound Composite** (Cfx docs). Whether a door without a skeleton works is
+   unverified.
+6. Textures: embed them or use a `.ytd` named in the archetype's Texture Dictionary. Painting out a door baked into
+   the shell texture belongs to `gta-texture-editing`.
+7. Export the `.ydr` (Native or CW XML; Gen8 and/or Gen9) with **Apply Parent Transforms OFF**. File name =
+   archetype name (no `.001`).
+
+## Vanilla doors: reference only
+
+Do not ship vanilla door props in the build. Use them to read real dimensions, the `.ytyp` Special Attribute and
+flags, extension values and in-game behaviour. In CodeWalker, use RPF Explorer > search `door`, `gate`, `gar_door`,
+`shutter`, then open the `.ytyp`. In game, use `GetModelDimensions(model)`. Models that public doorlock configs drive
+with the door system, so they are known door archetypes worth measuring:
 
 | Model | Kind | Seen in |
 |---|---|---|
@@ -47,29 +72,8 @@ Read when building or placing a swinging, double or sliding door in an MLO. Gara
 | `lr_prop_supermod_door_01` | vertical garage (official template) | Cfx docs |
 | `prop_sec_barrier_ld_01a`, `prop_sec_barrier_ld_02a` | barrier arm | cfx-anes-gates (`prop_sec_barier_02a` is **not** a door) |
 
-3. Add it to the MLO as an entity by archetype name. Vanilla archetypes need no streaming. Build the opening to fit
-   the door: get the size with `GetModelDimensions(model)` in game or from the bounding box in CodeWalker. Do not
-   scale door entities (`scaleXY`/`scaleZ` ≠ 1); whether the bounds of dynamic objects follow entity scale is unverified.
-
-## Option B: custom door from your own geometry (Sollumz, official Cfx workflow)
-
-1. Model the leaf as a **closed** mesh (front, back, edges) with normals pointing out. A single plane disappears from
-   one side. Paint vertex colours (`Color 1`, face corner, byte color): green for interior assets, red for exterior
-   (Cfx docs Part 3). Unpainted props look dark or black in MLOs (Sollumz FAQ).
-2. Import the template: `v_ilev_bl_door_l.ydr` (swing), `prop_facgate_07b.ydr` (sliding), `lr_prop_supermod_door_01.ydr`
-   (vertical garage). Use CodeWalker to export and Sollumz to import.
-3. Origin: select the hinge edge, use `Mesh > Snap > Cursor to Selected`, then in Object Mode `Object > Set Origin >
-   Origin to 3D Cursor`. Hinge = side center (swing), bottom corner (sliding), bottom center (vertical garage).
-4. Align your mesh with the template mesh (same facing and same closed pose) and apply all transforms.
-5. Convert to Drawable. Delete the template mesh, then unparent your mesh and parent it to the template armature/drawable.
-   Add a **Copy Transforms** constraint with Target = armature and Bone = the template's door bone.
-6. Collision: keep the template's Bound Composite and resize its box (a box bound is better than a mesh). If you
-   changed the collision's scale or transforms, create a **new Bound Composite** and parent the collision to it, or
-   the in-game collision breaks (Cfx docs). Keep the template's composite flags and use a fitting material
-   (`WOOD_*`, `METAL_*`, `GLASS_*` for glass doors).
-7. Textures: embed them or use a `.ytd` named in the archetype's Texture Dictionary. Painting out a door baked into
-   the shell texture belongs to `gta-texture-editing`.
-8. Export the `.ydr` (Native or CW XML; Gen8 and/or Gen9). File name = archetype name.
+Do not scale door entities (`scaleXY`/`scaleZ` ≠ 1). Whether the bounds of dynamic objects follow entity scale is
+unverified, so build the door to the opening instead.
 
 ### ytyp archetype (Sollumz: Archetype Definition > YTYPs > Auto-Create From Selected)
 
@@ -80,7 +84,7 @@ Read when building or placing a swinging, double or sliding door in an MLO. Gara
 | Asset Type | Drawable |
 | Special Attribute | Normal Door (7) / Sliding Door (8) / Garage Door (5) |
 | Flags | Dynamic + Enable Door Physics (at least `67239936`); never Static (32) |
-| Physics Dictionary | empty (collision embedded in the `.ydr`) |
+| Physics Dictionary | archetype name when the collision is embedded (Sollumz sets it when you assign the asset; the wiki says "blank or same as Archetype Name") |
 | LOD Distance | about 100 (vanilla door entities use 100) |
 
 ```xml
@@ -158,3 +162,8 @@ and distance.
 | Script coords taken from Blender | World coords of the door object read in game |
 | Shell collision across the doorway | Opening cut; the door bound blocks when closed |
 | Left door made with `scaleXY -1` | L/R models, or a 180° rotation |
+| Vanilla door prop shipped in the MLO | Custom leaf built to the opening; vanilla only measured |
+| Hinge axis on the jamb plane (leaf scrapes the frame or stops at about 60°) | Axis inset `gap + t/2`, hinge barrel |
+| Bound box reaching past the hinge axis | Bound from the free edge to the axis |
+| Leaf as wide as the opening (no gaps) | 3 mm sides/top, 10 mm floor |
+| "Apply Parent Transforms" on, with a rotated left leaf | Off: export stays local to the Drawable |

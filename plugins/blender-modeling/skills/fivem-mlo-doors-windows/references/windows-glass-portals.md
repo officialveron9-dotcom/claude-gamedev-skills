@@ -4,6 +4,10 @@ Read when an MLO needs real windows: see out from inside, see in from outside, g
 breakage, and lit windows at night. General rooms/portals/collision are covered in `fivem-mlo-creation`. Removing
 windows painted into textures is covered in `gta-texture-editing`.
 
+Build windows from scratch with `make_window` plus `make_wall_with_opening(*win["wall_opening"])`
+([procedural-modeling.md](procedural-modeling.md)): static frame and mullions, separate double-faced glass drawable,
+and a reveal in the wall. Both are tested headless.
+
 ## Anatomy of a working window
 
 1. **Hole** in the shell mesh and in the shell collision (or a glass collision, see below).

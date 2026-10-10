@@ -56,7 +56,7 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 |---|---|
 | `fivem-mlo-creation` | Hauptablauf: GTA-Gebäude aus CodeWalker in Blender/Sollumz zum begehbaren MLO machen; Aushöhlen, Öffnungen, Räume, Portale, Kollision, Licht, Export für Legacy und Enhanced; bpy-Scripts in Blender 4.5 und 5.2 mit Sollumz getestet |
 | `gta-texture-editing` | GTA-Texturen bearbeiten: aufgemalte Türen/Fenster wegretuschieren (auch `_n`, `_s`, Nacht-Maps, LODs), Farben ändern, DDS-Formate, `.ytd` packen; getestete Python-Scripts |
-| `fivem-mlo-doors-windows` | Echte Türen, Garagentore (Keypad, PIN, Fernbedienung) und Glasfenster mit Durchsicht für MLOs; Portale, Glas-Shader, Türsystem-Lua, ox_doorlock |
+| `fivem-mlo-doors-windows` | Eigene Türen, Doppeltüren, Garagentore und Fenster komplett in Blender bauen (getestete bpy-Generatoren mit richtigem Drehpunkt), dazu GTA-Tür-Attribute, Glas-Shader, Portale mit Durchsicht, Türsystem-Lua mit Keypad/PIN/Fernbedienung |
 | `clothing-creation-pipeline` | Fotorealistische Kleidung erstellen und an den Körper anpassen: Marvelous Designer/CLO, Blender, Substance-Stoffe, Weight-Transfer, Export nach UE |
 | `blender-python-pitfalls` | bpy-Änderungen von Blender 2.8 bis 5.x, exakte Fehlermeldungen → Ursache → Lösung; damit Claudes Blender-Scripts laufen |
 | `blender-current-api`, `blender-game-export`, `blender-verify` | Aktuelle API, Export für Game-Engines, Ergebnisse prüfen (übernommen, MIT) |
