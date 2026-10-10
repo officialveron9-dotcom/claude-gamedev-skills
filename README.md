@@ -18,7 +18,7 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 | `unreal-engine-reference` | 31 | [quodsoler/unreal-engine-skills](https://github.com/quodsoler/unreal-engine-skills), MIT |
 | `fivem` | 6 | eigene Recherche |
 | `brotato` | 7 | eigene Recherche |
-| `blender-modeling` | 13 | eigene Recherche + [luckyfried/code-tools](https://github.com/luckyfried/code-tools), [scenario-labs/skills](https://github.com/scenario-labs/skills) (MIT) |
+| `blender-modeling` | 14 | eigene Recherche + [luckyfried/code-tools](https://github.com/luckyfried/code-tools), [scenario-labs/skills](https://github.com/scenario-labs/skills) (MIT) |
 | `general-dev` | 2 | [obra/superpowers](https://github.com/obra/superpowers), MIT |
 | `gamedev-general` | 12 | [awesome-gamedev-agent-skills](https://github.com/gamedev-skills/awesome-gamedev-agent-skills) (Apache-2.0), [mattpocock/skills](https://github.com/mattpocock/skills) (MIT), [fvadicamo/dev-agent-skills](https://github.com/fvadicamo/dev-agent-skills) (MIT) |
 | `web-dev` | 12 | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills), [pproenca/dot-skills](https://github.com/pproenca/dot-skills), [addyosmani](https://github.com/addyosmani/web-quality-skills), [anthropics/skills](https://github.com/anthropics/skills), [testdino-hq](https://github.com/testdino-hq/playwright-skill), [supabase/agent-skills](https://github.com/supabase/agent-skills), [mcollina/skills](https://github.com/mcollina/skills) u. a. (MIT/Apache-2.0) |
@@ -57,6 +57,7 @@ Claude versteht trotzdem deine deutschen Fragen; die Beschreibungen enthalten au
 | `fivem-mlo-creation` | Hauptablauf: GTA-Gebäude aus CodeWalker in Blender/Sollumz zum begehbaren MLO machen; Aushöhlen, Öffnungen, Räume, Portale, Kollision, Licht, Export für Legacy und Enhanced; bpy-Scripts in Blender 4.5 und 5.2 mit Sollumz getestet |
 | `gta-texture-editing` | GTA-Texturen bearbeiten: aufgemalte Türen/Fenster wegretuschieren (auch `_n`, `_s`, Nacht-Maps, LODs), Farben ändern, DDS-Formate, `.ytd` packen; getestete Python-Scripts |
 | `fivem-mlo-doors-windows` | Eigene Türen, Doppeltüren, Garagentore und Fenster komplett in Blender bauen (getestete bpy-Generatoren mit richtigem Drehpunkt), dazu GTA-Tür-Attribute, Glas-Shader, Portale mit Durchsicht, Türsystem-Lua mit Keypad/PIN/Fernbedienung |
+| `blender-furniture-modeling` | Realistische feste Möbel mit echten Maßen (Tisch, Stuhl, Barhocker, Regal, Schrank, Küche, Bettgestell, Billardtisch), Konstruktion, Materialien, saubere Geometrie; getestete Generatoren |
 | `clothing-creation-pipeline` | Fotorealistische Kleidung erstellen und an den Körper anpassen: Marvelous Designer/CLO, Blender, Substance-Stoffe, Weight-Transfer, Export nach UE |
 | `blender-python-pitfalls` | bpy-Änderungen von Blender 2.8 bis 5.x, exakte Fehlermeldungen → Ursache → Lösung; damit Claudes Blender-Scripts laufen |
 | `blender-current-api`, `blender-game-export`, `blender-verify` | Aktuelle API, Export für Game-Engines, Ergebnisse prüfen (übernommen, MIT) |
