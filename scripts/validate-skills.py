@@ -4,6 +4,11 @@ import os
 import re
 import sys
 
+try:
+    import yaml  # optional: enables the strict YAML check that claude.ai uploads need
+except ImportError:
+    yaml = None
+
 # Keys that claude.ai uploads and the Agent Skills spec accept; anything else breaks a ZIP upload.
 ALLOWED_KEYS = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
 MAX_DESCRIPTION = 1024
@@ -32,6 +37,11 @@ for dirpath, _, files in sorted(os.walk(os.path.join(root, "plugins"))):
         issues.append("missing frontmatter")
     else:
         frontmatter = match.group(1)
+        if yaml is not None:
+            try:
+                yaml.safe_load(frontmatter)
+            except yaml.YAMLError as err:
+                issues.append(f"frontmatter is not valid YAML (quote the description): {str(err).splitlines()[0]}")
         keys = set(re.findall(r"^([A-Za-z_-]+):", frontmatter, re.M))
         if keys - ALLOWED_KEYS:
             issues.append(f"unsupported keys {sorted(keys - ALLOWED_KEYS)}")

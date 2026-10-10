@@ -1,6 +1,6 @@
 ---
 name: clothing-creation-pipeline
-description: Guides creating photorealistic clothing that fits a specific character body before it reaches Unreal Engine 5.8. Covers tool choice with versions and licenses (Marvelous Designer/CLO 2026, Blender 5.2, Substance 3D, ZBrush, CC5, Daz, Fab, MetaHuman Outfit Assets), exporting the MetaHuman or Manny body as avatar, draping and fitting, skin weight transfer (Blender, Maya, UE), correctives, body masks, LODs, fabric materials and fuzz, FBX/USD export, bpy automation and Blender/MD MCP servers. Use when making or fitting garments, outfits or fabrics, or when clothes float, clip, snap or look plastic. German: Kleidung erstellen, fotorealistische Kleidung, Klamotten, passt nicht am Koerper, Stoff, Schnittmuster, Outfit.
+description: "Guides creating photorealistic clothing that fits a specific character body before it reaches Unreal Engine 5.8. Covers tool choice with versions and licenses (Marvelous Designer/CLO 2026, Blender 5.2, Substance 3D, ZBrush, CC5, Daz, Fab, MetaHuman Outfit Assets), exporting the MetaHuman or Manny body as avatar, draping and fitting, skin weight transfer (Blender, Maya, UE), correctives, body masks, LODs, fabric materials and fuzz, FBX/USD export, bpy automation and Blender/MD MCP servers. Use when making or fitting garments, outfits or fabrics, or when clothes float, clip, snap or look plastic. German: Kleidung erstellen, fotorealistische Kleidung, Klamotten, passt nicht am Koerper, Stoff, Schnittmuster, Outfit."
 ---
 
 # Clothing creation pipeline (DCC side, UE 5.8 handoff)

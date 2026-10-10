@@ -1,6 +1,6 @@
 ---
 name: ue5-character-creation-clothing
-description: Pitfalls, exact settings and fixes for creating and dressing characters in Unreal Engine 5 (current 5.8). Covers MetaHuman Creator outfits and parametric clothing; Fab, Character Creator, Daz and Mixamo imports and licenses; modular outfits (Leader Pose, Copy Pose, Skeletal Mesh Merge, Mutable); skin weights, poke-through and clothing LODs; Chaos Cloth Asset/Dataflow; grooms and hats. Use when importing or dressing a character, or when clothing clips, stretches or explodes, or hair floats. German: Charakter erstellen, Kleidung, anziehen, Klamotten, Stoffsimulation, Haare, MetaHuman Fehler.
+description: "Pitfalls, exact settings and fixes for creating and dressing characters in Unreal Engine 5 (current 5.8). Covers MetaHuman Creator outfits and parametric clothing; Fab, Character Creator, Daz and Mixamo imports and licenses; modular outfits (Leader Pose, Copy Pose, Skeletal Mesh Merge, Mutable); skin weights, poke-through and clothing LODs; Chaos Cloth Asset/Dataflow; grooms and hats. Use when importing or dressing a character, or when clothing clips, stretches or explodes, or hair floats. German: Charakter erstellen, Kleidung, anziehen, Klamotten, Stoffsimulation, Haare, MetaHuman Fehler."
 ---
 
 # UE5 characters and clothing: workflows, traps, fixes
